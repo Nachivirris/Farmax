@@ -1,19 +1,21 @@
-# farmax
+# Farmax
 
-## Project setup
+Sistema de gestion para una farmacia construido en base a VueJs.
+
+## Setup para el proyecto
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compila e inicia un servidor local
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compila y genera version para produccions
 ```
 npm run build
 ```
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Mira la documentacion de Vue.js oficial [aqui](https://cli.vuejs.org/config/).
