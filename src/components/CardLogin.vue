@@ -1,9 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header mx-auto">
-      <h1
-        class="card-header-title title is-1 has-text-weight-bold has-text-primary"
-      >
+      <h1 class="card-header-title is-size-1-mobile has-text-primary">
         BIENVENIDO A
 
         <img
@@ -19,10 +17,8 @@
       <div class="has-text-left column">
         Si ya tiene una cuenta inicie sesion
         <div class="notification is-danger" v-if="error.type !== null">
-          <b-icon icon="alert">
-
-          </b-icon>
-          {{error.message}}
+          <b-icon icon="alert"> </b-icon>
+          {{ error.message }}
         </div>
         <section class="has-text-black mt-5">
           <b-field label="Correo electronico">
@@ -48,7 +44,7 @@
             type="is-primary"
             :disabled="validarCampos"
             expanded
-            @click="iniciarSesion"
+            @click="iniciarSesion(user)"
           >
             Inicia sesion
           </b-button>
@@ -69,7 +65,7 @@
 
     <p>
       {{ user }}
-      {{error}}
+      {{ error }}
     </p>
   </div>
 </template>
@@ -87,9 +83,6 @@ export default {
     validarEmail(email) {
       const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
       return re.test(String(email).toLowerCase());
-    },
-    toast() {
-      this.$buefy.toast.open("error");
     },
   },
   computed: {

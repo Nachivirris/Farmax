@@ -1,21 +1,21 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import router from "../router";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     error: {
       type: null,
-      message: "",
+      message: ""
     },
     user: {
       email: "",
       password: "",
       role: "",
       nombre: "",
-      apellidos: "",
-    },
+      apellidos: ""
+    }
   },
   mutations: {
     setError(state, payload) {
@@ -27,7 +27,7 @@ export default new Vuex.Store({
       if (payload === "EMAIL_NOT_FOUND") {
         return (state.error = {
           type: "email",
-          message: "Correo electronico no encontrado",
+          message: "Correo electronico no encontrado"
         });
       }
 
@@ -35,7 +35,7 @@ export default new Vuex.Store({
       if (payload === "INVALID_PASSWORD") {
         return (state.error = {
           tipo: "password",
-          mensaje: "Contraseña no válida",
+          mensaje: "Contraseña no válida"
         });
       }
       //LOGIN
@@ -43,7 +43,7 @@ export default new Vuex.Store({
         return (state.error = {
           tipo: "password",
           mensaje:
-            "La cuenta de usuario ha sido inhabilitada por un administrador",
+            "La cuenta de usuario ha sido inhabilitada por un administrador"
         });
       }
       if (
@@ -52,41 +52,43 @@ export default new Vuex.Store({
       ) {
         return (state.error = {
           tipo: "attempts",
-          mensaje:
-            "Demasiados intentos de ingreso, intente mas tarde",
+          mensaje: "Demasiados intentos de ingreso, intente mas tarde"
         });
       }
       // REGISTER
       if (payload === "EMAIL_EXISTS") {
         return (state.error = {
           tipo: "email",
-          mensaje: "Correo electronico ya registrado",
+          mensaje: "Correo electronico ya registrado"
         });
       }
       // REGISTER
       if (payload === "INVALID_EMAIL") {
         return (state.error = {
           tipo: "email",
-          mensaje: "Formato email no válido",
+          mensaje: "Formato email no válido"
         });
       }
 
       console.log(state.error.message);
     },
+    setUser(state, payload) {
+      state.user = payload;
+      localStorage.setItem("user", JSON.stringify(payload));
+    }
   },
   actions: {
-    async iniciarSesion({ commit, state }) {
-      commit("setError", null);
+    async iniciarSesion({ commit }, user) {
       try {
         const res = await fetch(
           "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCh37mmPaCWQF2osXVXPpWQ02kNz2YWMP0",
           {
             method: "POST",
             body: JSON.stringify({
-              email: state.user.email,
-              password: state.user.password,
-              returnSecureToken: true,
-            }),
+              email: user.email,
+              password: user.password,
+              returnSecureToken: true
+            })
           }
         );
 
@@ -98,10 +100,12 @@ export default new Vuex.Store({
           console.log(dataDB.error.message);
           commit("setError", dataDB.error.message);
         }
+        commit("setUser", user);
+        router.push("/menu");
       } catch (error) {
         console.log(error);
       }
-    },
+    }
   },
-  modules: {},
+  modules: {}
 });
