@@ -12,10 +12,10 @@ npm install
 npm run serve
 ```
 
-### Compila y genera version para produccions
+### Compila y genera version para produccion
 ```
 npm run build
 ```
 
-### Customize configuration
+### Personalizar Configuracion
 Mira la documentacion de Vue.js oficial [aqui](https://cli.vuejs.org/config/).
