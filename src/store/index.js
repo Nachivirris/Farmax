@@ -98,10 +98,10 @@ export default new Vuex.Store({
 
         if (dataDB.error) {
           console.log(dataDB.error.message);
-          commit("setError", dataDB.error.message);
+          return commit("setError", dataDB.error.message);
         }
-        commit("setUser", user);
-        router.push("/menu");
+        commit("setUser", {user, dataDB});
+        router.push("/");
       } catch (error) {
         console.log(error);
       }

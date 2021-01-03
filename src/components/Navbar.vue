@@ -1,13 +1,15 @@
 <template>
   <b-navbar type="" shadow fixed-top class="">
     <template slot="start">
-      <img
-        src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Farmax_LT.svg?alt=media&token=4fa00881-ac50-41d2-be91-be3e5e59256b"
-        alt="IDK"
-        width="150"
-        height=""
-        class="m-3"
-      />
+      <router-link to="/">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Farmax_LT.svg?alt=media&token=4fa00881-ac50-41d2-be91-be3e5e59256b"
+          alt="IDK"
+          width="100"
+          height=""
+          class="m-4"
+        />
+      </router-link>
       <!-- <div class="mt-2 ml-4 is-primary">
         <h1 class="title is-4 mt-1 mr-4">Farmacia Final Los Andes</h1>
       </div> -->
@@ -25,9 +27,11 @@
             <strong>Registrarse</strong>
           </a>
           <!-- <a class="button is-primary is-light"> Iniciar Sesion </a> -->
-          <b-button type="is-primary is-light">
-            <strong> Iniciar Sesion </strong>
-          </b-button>
+          <router-link to="/login">
+            <b-button type="is-primary is-light">
+              <strong> Iniciar Sesion </strong>
+            </b-button>
+          </router-link>
         </div>
       </b-navbar-item>
     </template>
