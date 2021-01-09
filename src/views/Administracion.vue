@@ -1,9 +1,7 @@
 <template>
   <div class="mt-5 columns">
-    <MenuDes tipoMenu="Inicio" />
-    <div class="mt-5 title is-1 has-text-primary">
-      Bienvenido a Farmax
-    </div>
+    <MenuDes tipoMenu="Administracion" />
+    Administracion
   </div>
 </template>
 

@@ -16,10 +16,9 @@
     <div class="card-content columns">
       <div class="has-text-left column">
         Si ya tiene una cuenta inicie sesion
-        <div class="notification is-danger" v-if="error.type !== null">
-          <b-icon icon="alert"> </b-icon>
-          {{ error.message }}
-        </div>
+        <b-notification v-if="error.tipo !== null " type="is-danger" has-icon role="alert">
+          {{ error.mensaje}}
+        </b-notification>
         <section class="has-text-black mt-5">
           <b-field label="Correo electronico">
             <b-input
@@ -63,10 +62,6 @@
       </div>
     </div>
 
-    <p>
-      {{ user }}
-      {{ error }}
-    </p>
   </div>
 </template>
 
@@ -76,7 +71,12 @@ import { mapActions, mapState } from "vuex";
 export default {
   components: {},
   data() {
-    return {};
+    return {
+      user: {
+        email: "ignaciopaz72@gmail.com",
+        password: "20072002",
+      },
+    };
   },
   methods: {
     ...mapActions(["iniciarSesion"]),
@@ -86,18 +86,22 @@ export default {
     },
   },
   computed: {
-    ...mapState(["user", "error"]),
+    ...mapState(["error"]),
     validarCampos() {
-      if (
-        this.user.email.trim() !== "" &&
-        this.validarEmail(this.user.email) &&
-        this.user.password.trim() !== "" &&
-        this.user.password.trim().length > 5
-      ) {
+      try {
+        if (
+          this.user.email !== "" &&
+          this.validarEmail(this.user.email) &&
+          this.user.password !== "" &&
+          this.user.password.length > 5
+        ) {
+          return false;
+        }
+
+        return true;
+      } catch (error) {
         return false;
       }
-
-      return true;
     },
   },
   created() {},

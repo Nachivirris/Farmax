@@ -13,25 +13,25 @@
       <!-- <div class="mt-2 ml-4 is-primary">
         <h1 class="title is-4 mt-1 mr-4">Farmacia Final Los Andes</h1>
       </div> -->
-      <b-navbar-item href="/"> Inicio </b-navbar-item>
-      <b-navbar-dropdown label="Informacion">
-        <b-navbar-item href="/"> Acerca de </b-navbar-item>
-        <b-navbar-item href="/"> Contacto </b-navbar-item>
-      </b-navbar-dropdown>
     </template>
 
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="buttons">
-          <a class="button is-primary">
-            <strong>Registrarse</strong>
-          </a>
+          
           <!-- <a class="button is-primary is-light"> Iniciar Sesion </a> -->
           <router-link to="/login">
-            <b-button type="is-primary is-light">
+            <b-button type="is-primary is-light" v-if="!usuarioAutenticado">
               <strong> Iniciar Sesion </strong>
             </b-button>
           </router-link>
+
+          <b-button
+            type="is-danger"
+            v-if="usuarioAutenticado"
+            @click="cerrarSesion"
+            >Cerrar sesion</b-button
+          >
         </div>
       </b-navbar-item>
     </template>
@@ -39,7 +39,15 @@
 </template>
 
 <script>
-export default {};
+import { mapActions, mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters(["usuarioAutenticado"]),
+  },
+  methods: {
+    ...mapActions(["cerrarSesion"]),
+  },
+};
 </script>
 
 <style>
