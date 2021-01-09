@@ -4,7 +4,7 @@
     <div class="m-5 column">
 
         <div class="title is-1 has-text-primary  is-four-fifths">Compras.</div>
-        <b-button class="my-3" expanded type="is-primary " icon-left="arrow-right">Crear Compra</b-button>
+        <b-button  tag="router-link" to="/compras/crear" class="my-3" expanded type="is-primary" icon-left="arrow-right">Crear Compra</b-button>
 
 
       <div>

@@ -31,18 +31,29 @@
           <b-field label="Nombre">
             <b-input v-model="proveedorNuevo.nombre"></b-input>
           </b-field>
+          <b-field label="Apellidos">
+            <b-input v-model="proveedorNuevo.apellidos"></b-input>
+          </b-field>
           <b-field label="Busque el Laboratorio">
-            <b-autocomplete
-              rounded
-              v-model="proveedorNuevo.laboratorio"
-              :data="laboratoriosFiltrados"
-              placeholder="e.g. Bago"
-              icon="magnify"
-              clearable
-              @select="(option) => (selected = option)"
-            >
-              <template slot="empty">No se encontraron laboratorios </template>
-            </b-autocomplete>
+            <div class="">
+              Si no encuentra el Laboratorio y quiere crear uno, haga click
+              <router-link to="/">aqui</router-link>
+            </div>
+            <div>
+              <b-autocomplete
+                rounded
+                v-model="proveedorNuevo.laboratorio"
+                :data="laboratoriosFiltrados"
+                placeholder="e.g. Bago"
+                icon="magnify"
+                clearable
+                @select="(option) => (selected = option)"
+              >
+                <template slot="empty"
+                  >No se encontraron laboratorios
+                </template>
+              </b-autocomplete>
+            </div>
           </b-field>
           <b-field label="Numero">
             <b-input v-model="proveedorNuevo.numero"></b-input>
@@ -85,6 +96,7 @@ export default {
       proveedorSeleccionado: "",
       proveedorNuevo: {
         nombre: "",
+        apellidos: "",
         laboratorio: "",
         numero: 71234567,
       },
@@ -97,7 +109,15 @@ export default {
     ...mapState(["proveedores", "laboratorios"]),
     proveedoresFiltrados() {
       const nombresProveedores = this.proveedores.map(function (prov) {
-        return prov.nombre + " - " + prov.laboratorio;
+        return (
+          prov.nombre +
+          " " +
+          prov.apellidos +
+          " - " +
+          prov.laboratorio +
+          " - " +
+          prov.numero
+        );
       });
 
       return nombresProveedores.filter((option) => {
