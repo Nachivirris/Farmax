@@ -26,7 +26,16 @@ export default new Vuex.Store({
       nombre: ""
     },
     laboratorios: [],
-    compras: {},
+    compras: [],
+    inventario: [],
+    medicamentos: [],
+    medicamento: {
+      nombre: "",
+      cantidad: "Number" ,
+      precio: "Number",
+      vencimiento: new Date(),
+      lote: "",
+    }
   },
   mutations: {
     setError(state, payload) {
@@ -241,6 +250,7 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
+
   },
   modules: {},
   getters: {
