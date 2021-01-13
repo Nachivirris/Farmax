@@ -26,6 +26,14 @@ export default new Vuex.Store({
       nombre: "",
     },
     laboratorios: [],
+    compra : {
+      id:"",
+      proveedor: "",
+      fecha: new Date(),
+      medicamentos: [],
+      total: 0
+
+    },
     compras: [],
     inventario: [],
     medicamentos: [],
@@ -316,6 +324,36 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
+    async guardarCompra({commit, state}){
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+
+      try {
+        console.log("Firebase compra");
+        //console.log(state.compra);
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/compras/${state.compra.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(state.compra),
+          }
+        );
+
+        const dataDB = await res.json();
+        console.log(dataDB);
+
+        // commit("setCompra", dataDB);
+        router.push("/compras");
+      } catch (error) {
+        //console.log(error);
+      }
+    }
   },
   modules: {},
   getters: {

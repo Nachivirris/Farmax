@@ -13,14 +13,25 @@
       </b-table-column>
 
       <b-table-column
-        field="laboratorio.nombre"
+        field="proveedor.laboratorio"
         label="Laboratorio"
         width="40"
         searchable
         sortable
         v-slot="props"
       >
-        {{ props.row.laboratorio.nombre }}
+        {{ props.row.proveedor.laboratorio }}
+      </b-table-column>
+
+      <b-table-column
+        field="proveedor.nombre"
+        label="Nombre Proveedor"
+        width="40"
+        searchable
+        sortable
+        v-slot="props"
+      >
+        {{ props.row.proveedor.nombre }}
       </b-table-column>
 
       <b-table-column
@@ -45,7 +56,7 @@
         v-slot="props"
       >
         <span class="tag is-success">
-          {{ props.row.fecha }}
+          {{ new Date(props.row.fecha).toLocaleDateString() }}
         </span>
       </b-table-column>
 

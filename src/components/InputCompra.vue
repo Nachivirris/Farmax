@@ -223,9 +223,7 @@
           </b-field>
         </div>
       </div>
-{{medicamento}}
-<br>
-{{medicamentoSeleccionado}}
+      
       <b-button
         class="mt-3"
         :disabled="!verificarCamposMedicamentos"
@@ -241,17 +239,9 @@
 
       
 
-      <div class="mt-3">
-        {{ nuevoProveedor ? proveedor : proveedorSeleccionado }}
-        <br />
-        {{ datetime }}
-        <br />
-        {{ medicamentos }}
-        <br>
-        {{ calcularTotalCompras }}
-      </div>
-
-      <b-button type="is-success" expanded @click="guardarCompra">Enviar</b-button>
+      <b-button type="is-success" expanded @click="enviarCompra"
+        >Enviar</b-button
+      >
     </div>
   </div>
 </template>
@@ -299,6 +289,7 @@ export default {
       "cargarLaboratorios",
       "añadirMedicamentoLista",
       "cargarInventario",
+      "guardarCompra",
     ]),
     alertCustom(mensaje) {
       this.$buefy.dialog.alert({
@@ -344,7 +335,6 @@ export default {
     enviarMedicamento() {
       const shortid = require("shortid");
 
-      
       if (this.medicamento.nombre !== "" && this.medicamentoNuevo) {
         this.medicamento.id = shortid.generate();
         this.añadirMedicamentoLista();
@@ -369,7 +359,7 @@ export default {
         //   vencimiento: new Date(),
         //   lote: "",
         // };
-        // return console.log("error"); 
+        // return console.log("error");
         // this.medicamentoSeleccionado.nombre = ""
         // this.medicamentoSeleccionado.cantidad = 0
         // this.medicamentoSeleccionado.precio = 0
@@ -377,20 +367,17 @@ export default {
         this.cantidadAñadida = 1;
       }
     },
-    guardarCompra(){
-      let compra = {
-        proveedor: "",
-        fecha: new Date(),
-        medicamentos: [],
-        total: 0
-
-      }
-      compra.proveedor = this.nuevoProveedor ? this.proveedor : this.proveedorSeleccionado
-      compra.fecha = this.datetime
-      compra.medicamentos = this.medicamentos
-      compra.total = this.calcularTotalCompras
-      console.log(compra);
-    }
+    enviarCompra() {
+      const shortid = require("shortid");
+      this.compra.proveedor = this.nuevoProveedor
+        ? this.proveedor
+        : this.proveedorSeleccionado;
+      this.compra.fecha = this.datetime;
+      this.compra.medicamentos = this.medicamentos;
+      this.compra.total = this.calcularTotalCompras;
+      this.compra.id = shortid.generate();
+      this.guardarCompra(this.compra);
+    },
   },
   computed: {
     ...mapState([
@@ -399,6 +386,7 @@ export default {
       "medicamento",
       "medicamentos",
       "inventario",
+      "compra",
     ]),
     ...mapGetters(["calcularTotalCompras"]),
     laboratoriosFiltrados() {
