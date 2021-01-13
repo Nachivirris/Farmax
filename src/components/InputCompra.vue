@@ -86,7 +86,6 @@
                 rounded
                 v-model="proveedor.nombre"
                 placeholder="e.g. Juan Carranza"
-                keep-first
                 :open-on-focus="true"
                 :data="proveedoresFiltrados"
                 field="nombre"
@@ -120,18 +119,36 @@
     <div class="mt-3" v-if="etapa1">
       Añadir medicamento
       <br />
-      {{ medicamento }}
-      <div class="columns">
+
+      <b-checkbox v-model="medicamentoNuevo">
+        Es un medicamento nuevo?
+      </b-checkbox>
+
+      <!-- Medicamento Nuevo -->
+      <div v-if="medicamentoNuevo" class="columns">
         <div class="column">
           <b-field label="Nombre del Medicamento">
             <b-input v-model="medicamento.nombre"></b-input>
           </b-field>
           <div class="columns">
-            <b-field  class="column" label="Cantidad">
-              <b-input v-model="medicamento.cantidad"></b-input>
+            <b-field class="column" label="Cantidad">
+              <b-numberinput
+                min="1"
+                v-model.number="medicamento.cantidad"
+              ></b-numberinput>
             </b-field>
-            <b-field class="column" label="Precio del medicamento">
-              <b-input v-model="medicamento.precio"></b-input>
+            <b-field class="column" label="Precio unitario">
+              <b-numberinput
+                step="0.5"
+                min-step="0.1"
+                min="0.1"
+                v-model.number="medicamento.precio"
+              ></b-numberinput>
+            </b-field>
+            <b-field class="column" label="Precio total">
+              <div class="m-4">
+                {{ medicamento.precio * medicamento.cantidad }} {{ " Bs" }}
+              </div>
             </b-field>
           </div>
         </div>
@@ -155,23 +172,109 @@
 
           <b-field label="Numero de Lote">
             <b-input v-model="medicamento.lote"></b-input>
-        </b-field>
+          </b-field>
         </div>
-        
       </div>
-      <b-button icon-right="check" type="is-primary" expanded>
+      <!-- Medicamento Existente -->
+      <div v-if="!medicamentoNuevo">
+        <b-field label="Busque un Medicamento">
+          <b-autocomplete
+            class="my-3"
+            rounded
+            v-model="medicamentoSeleccionado.nombre"
+            placeholder="e.g. Dexametasona"
+            keep-first
+            :open-on-focus="true"
+            :data="medicamentosFiltrados"
+            field="nombre"
+            @select="(option) => (medicamentoSeleccionado = option)"
+          >
+          </b-autocomplete>
+        </b-field>
+        <div class="columns">
+          <b-field class="column" label="Stock Actual">
+            <div class="">
+              {{ medicamentoSeleccionado.cantidad }} {{ " unidad" }}
+            </div>
+          </b-field>
+          <b-field class="column" label="Cantidad a añadir">
+            <b-numberinput
+              min="1"
+              v-model.number="cantidadAñadida"
+            ></b-numberinput>
+          </b-field>
+          <b-field class="column" label="Stock Nuevo">
+            <div class="">
+              {{ medicamentoSeleccionado.cantidad + cantidadAñadida }}
+              {{ " unidad" }}
+            </div>
+          </b-field>
+          <b-field class="column" label="Precio Actual">
+            <div class="">{{ medicamentoSeleccionado.precio }} {{ " Bs" }}</div>
+          </b-field>
+          <b-field class="column" label="Precio Nuevo">
+            <b-input
+              type="number"
+              min="0"
+              step="0.1"
+              v-model.number="precioNuevo"
+            >
+            </b-input>
+          </b-field>
+        </div>
+      </div>
+{{medicamento}}
+<br>
+{{medicamentoSeleccionado}}
+      <b-button
+        class="mt-3"
+        :disabled="!verificarCamposMedicamentos"
+        icon-right="check"
+        type="is-primary"
+        expanded
+        @click="enviarMedicamento"
+      >
         Guardar Medicamento
       </b-button>
+
+      <TablaMedicamentosCompra />
+
+      
+
+      <div class="mt-3">
+        {{ nuevoProveedor ? proveedor : proveedorSeleccionado }}
+        <br />
+        {{ datetime }}
+        <br />
+        {{ medicamentos }}
+      </div>
+
+      <b-button type="is-success" expanded>Enviar</b-button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import TablaMedicamentosCompra from "../components/TablaMedicamentosCompra";
 export default {
+  components: {
+    TablaMedicamentosCompra,
+  },
   data() {
     return {
-      etapa1: true,
+      precioNuevo: 0,
+      cantidadAñadida: 0,
+      medicamentoNuevo: false,
+      medicamentoSeleccionado: {
+        id: "",
+        nombre: "",
+        cantidad: 0,
+        precio: 1,
+        vencimiento: new Date(),
+        lote: "",
+      },
+      etapa1: false,
       datetime: new Date(),
       nuevoProveedor: false,
       proveedorSeleccionado: {
@@ -189,7 +292,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["cargarProveedores", "cargarLaboratorios"]),
+    ...mapActions([
+      "cargarProveedores",
+      "cargarLaboratorios",
+      "añadirMedicamentoLista",
+      "cargarInventario",
+    ]),
     alertCustom(mensaje) {
       this.$buefy.dialog.alert({
         title: "Error",
@@ -203,7 +311,7 @@ export default {
       });
     },
     verificarFechaProveedor() {
-      if (!this.nuevoProveedor) {
+      if (this.nuevoProveedor !== null) {
         if (this.datetime !== null && this.proveedor !== null) {
           if (this.proveedor.nombre.trim() !== "") {
             this.etapa1 = true;
@@ -213,12 +321,12 @@ export default {
         } else {
           this.alertCustom("Proveedor no valido");
         }
-      } else {
+      } else if (this.proveedorSeleccionado !== null) {
         if (this.datetime !== null && this.proveedorSeleccionado !== null) {
           if (
-            (this.proveedorSeleccionado.nombre.trim() !== "" &&
-              this.proveedorSeleccionado.apellidos.trim() !== "" &&
-              this.proveedorSeleccionado.laboratorio.trim() !== "") 
+            this.proveedorSeleccionado.nombre.trim() !== "" &&
+            this.proveedorSeleccionado.apellidos.trim() !== "" &&
+            this.proveedorSeleccionado.laboratorio.trim() !== ""
           ) {
             this.etapa1 = true;
           } else {
@@ -227,11 +335,55 @@ export default {
         } else {
           this.alertCustom("Proveedor no valido");
         }
+      } else {
+        console.log("Ok");
+      }
+    },
+    enviarMedicamento() {
+      const shortid = require("shortid");
+
+      
+      if (this.medicamento.nombre !== "" && this.medicamentoNuevo) {
+        this.añadirMedicamentoLista();
+      } else if (
+        this.medicamentoSeleccionado.nombre !== "" &&
+        this.medicamentoNuevo === false
+      ) {
+        this.medicamento.nombre = this.medicamentoSeleccionado.nombre;
+        this.medicamento.cantidad = this.cantidadAñadida;
+        this.medicamento.precio =
+          this.precioNuevo === 0
+            ? this.medicamentoSeleccionado.precio
+            : this.precioNuevo;
+        this.medicamento.vencimiento = this.medicamentoSeleccionado.vencimiento;
+        this.medicamento.lote = this.medicamentoSeleccionado.lote;
+        this.medicamento.id = shortid.generate();
+        this.añadirMedicamentoLista();
+        // this.medicamentoSeleccionado = {
+        //   id: "",
+        //   nombre: "",
+        //   cantidad: 0,
+        //   precio: 1,
+        //   vencimiento: new Date(),
+        //   lote: "",
+        // };
+        // return console.log("error"); 
+        // this.medicamentoSeleccionado.nombre = ""
+        // this.medicamentoSeleccionado.cantidad = 0
+        // this.medicamentoSeleccionado.precio = 0
+        this.precioNuevo = 0;
+        this.cantidadAñadida = 1;
       }
     },
   },
   computed: {
-    ...mapState(["proveedores", "laboratorios", "medicamento"]),
+    ...mapState([
+      "proveedores",
+      "laboratorios",
+      "medicamento",
+      "medicamentos",
+      "inventario",
+    ]),
     laboratoriosFiltrados() {
       const nombresLaboratorios = this.laboratorios.map(function (lab) {
         return lab.nombre;
@@ -256,10 +408,46 @@ export default {
         );
       });
     },
+    medicamentosFiltrados() {
+      return this.inventario.filter((option) => {
+        return (
+          option.nombre
+            .toString()
+            .toLowerCase()
+            .indexOf(this.medicamento.nombre.toLowerCase()) >= 0
+        );
+      });
+    },
+    verificarCamposMedicamentos() {
+      // if (this.medicamento === null || this.medicamentoSeleccionado === null) {
+      //   return false;
+      // }
+      // else if (this.cantidadAñadida === 0 || this.precioNuevo === 0) {
+      //   return true;
+      // }
+      // else if(this.medicamento.nombre === "" || this.medicamentoSeleccionado.nombre === ""){
+      //   return true
+      // }
+      // else if (
+      //   this.medicamento.nombre.trim() !== "" &&
+      //   this.medicamento.cantidad > 0 &&
+      //   this.medicamento.precio > 0 &&
+      //   this.medicamento.lote.trim() !== "" &&
+      //   this.medicamento.vencimiento > new Date()
+      // ) {
+      //   return true;
+      // } else if (this.medicamentoSeleccionado.nombre !== "") {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
+      return true;
+    },
   },
   created() {
     this.cargarProveedores();
     this.cargarLaboratorios();
+    this.cargarInventario();
   },
 };
 </script>
