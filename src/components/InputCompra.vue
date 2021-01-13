@@ -247,15 +247,17 @@
         {{ datetime }}
         <br />
         {{ medicamentos }}
+        <br>
+        {{ calcularTotalCompras }}
       </div>
 
-      <b-button type="is-success" expanded>Enviar</b-button>
+      <b-button type="is-success" expanded @click="guardarCompra">Enviar</b-button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import TablaMedicamentosCompra from "../components/TablaMedicamentosCompra";
 export default {
   components: {
@@ -344,6 +346,7 @@ export default {
 
       
       if (this.medicamento.nombre !== "" && this.medicamentoNuevo) {
+        this.medicamento.id = shortid.generate();
         this.añadirMedicamentoLista();
       } else if (
         this.medicamentoSeleccionado.nombre !== "" &&
@@ -357,7 +360,6 @@ export default {
             : this.precioNuevo;
         this.medicamento.vencimiento = this.medicamentoSeleccionado.vencimiento;
         this.medicamento.lote = this.medicamentoSeleccionado.lote;
-        this.medicamento.id = shortid.generate();
         this.añadirMedicamentoLista();
         // this.medicamentoSeleccionado = {
         //   id: "",
@@ -375,6 +377,20 @@ export default {
         this.cantidadAñadida = 1;
       }
     },
+    guardarCompra(){
+      let compra = {
+        proveedor: "",
+        fecha: new Date(),
+        medicamentos: [],
+        total: 0
+
+      }
+      compra.proveedor = this.nuevoProveedor ? this.proveedor : this.proveedorSeleccionado
+      compra.fecha = this.datetime
+      compra.medicamentos = this.medicamentos
+      compra.total = this.calcularTotalCompras
+      console.log(compra);
+    }
   },
   computed: {
     ...mapState([
@@ -384,6 +400,7 @@ export default {
       "medicamentos",
       "inventario",
     ]),
+    ...mapGetters(["calcularTotalCompras"]),
     laboratoriosFiltrados() {
       const nombresLaboratorios = this.laboratorios.map(function (lab) {
         return lab.nombre;

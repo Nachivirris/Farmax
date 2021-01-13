@@ -331,6 +331,16 @@ export default new Vuex.Store({
         return false;
       }
     },
-    
+    calcularTotalCompras(state) {
+      const totales = state.medicamentos.map((med) => {
+        return med.cantidad * med.precio;
+      });
+      let suma = 0;
+      totales.forEach((element) => {
+        suma += element;
+      });
+
+      return suma;
+    },
   },
 });
