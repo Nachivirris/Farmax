@@ -44,7 +44,7 @@
         <b-field label="Razon Social">
           <b-input type="text" v-model="clienteNuevo.razon"></b-input>
         </b-field>
-        {{ clienteNuevo }}
+
       </div>
     </div>
     <div>

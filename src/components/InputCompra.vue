@@ -89,6 +89,7 @@
                 :open-on-focus="true"
                 :data="proveedoresFiltrados"
                 field="nombre"
+                clearable
                 @select="(option) => (proveedorSeleccionado = option)"
               >
               </b-autocomplete>

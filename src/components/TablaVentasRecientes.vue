@@ -2,9 +2,9 @@
   <div>
     <b-table :data="ventas">
       <b-table-column
-        sortable
+        sortable 
         searchable
-        field="cliente.nombre"
+        field="cliente.razon"
         label="Cliente"
         width="10"
         v-slot="props"
@@ -17,7 +17,7 @@
         label="Medicamentos"
         width="40"
         sortable
-        searchable
+        
         v-slot="props"
       >
         {{ props.row.medicamentos[0].nombre }}

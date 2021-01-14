@@ -56,11 +56,11 @@
           <div class="mt-3">
             {{ "Precio Total:" }} {{ calcularTotal() }} {{ " Bs" }}
           </div>
-          <div class="mt-3 is-align-content-end title is-4">
+          <!-- <div class="mt-3 is-align-content-end title is-4">
             {{ "Precio Final:" }}
             {{ calcularTotal() - calcularTotal() * (descuento / 100) }}
             {{ " Bs" }}
-          </div>
+          </div> -->
         </div>
       </template>
     </b-table>

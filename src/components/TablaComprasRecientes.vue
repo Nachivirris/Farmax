@@ -39,7 +39,7 @@
         label="Medicamentos"
         width="40"
         sortable
-        searchable
+        
         v-slot="props"
       >
         {{ props.row.medicamentos[0].nombre }}
