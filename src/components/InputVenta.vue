@@ -132,7 +132,7 @@ export default {
       "cargarInventario",
       "añadirMedicamentoLista",
       "guardarVenta",
-      "editarMedicamentoInventario"
+      "editarMedicamentoInventario",
     ]),
     enviarMedicamentoLista() {
       this.medicamento.cantidad = this.cantidadDisminuida;
@@ -146,17 +146,16 @@ export default {
     enviarVenta() {
       const shortid = require("shortid");
 
-      this.enviarMedicamento();
-
       this.venta.cliente = this.clienteNuevo;
       this.venta.fecha = this.datetime;
       this.venta.medicamentos = this.medicamentos;
       this.venta.total = this.calcularTotalCompras;
       this.venta.id = shortid.generate();
-      this.venta.regente = this.usuario
-        //   this.guardarCompra(this.venta);
-        console.log(this.venta);
-        this.guardarVenta()
+      this.venta.regente = this.usuario;
+      //   this.guardarCompra(this.venta);
+      console.log(this.venta);
+      this.guardarVenta();
+      this.enviarMedicamento();
       // this.medicamentos.splice(0, this.medicamentos.length);
     },
     enviarMedicamento() {

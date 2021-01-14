@@ -82,13 +82,13 @@
             params: { id: props.row.id },
           }"
         >
-          <b-button
+          <!-- <b-button
             class="mx-2"
             type="is-warning"
             
           >
             Editar
-          </b-button>
+          </b-button> -->
         </router-link>
         <b-button
           label="Eliminar"

@@ -118,6 +118,22 @@ const routes = [
     }
   },
   {
+    path: "/usuarios",
+    name: "Usuarios",
+    component: () => import("../views/Usuarios.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/usuarios/crear",
+    name: "CrearUsuario",
+    component: () => import("../views/CrearUsuario.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
     path: "/administracion",
     name: "Administracion",
     component: () => import("../views/Administracion.vue"),

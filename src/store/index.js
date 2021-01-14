@@ -17,6 +17,7 @@ export default new Vuex.Store({
       nombre: "",
       apellidos: "",
     },
+    usuarios: [],
     proveedor: {
       nombre: "",
       apellidos: "",
@@ -70,6 +71,7 @@ export default new Vuex.Store({
       nit: "",
     },
     clientes: [],
+    local:""
   },
   mutations: {
     setError(state, payload) {
@@ -144,6 +146,9 @@ export default new Vuex.Store({
     },
     setUsuario(state, payload) {
       state.usuario = payload;
+    },
+    setUsuarios(state, payload) {
+      state.usuarios = payload;
     },
     setCompras(state, payload) {
       state.compras = payload;
@@ -251,7 +256,101 @@ export default new Vuex.Store({
 
         // console.log(userDB);
         commit("setUsuario", userDB);
-        console.log(state.usuario);
+
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async cargarUsuarios({ commit, state }) {
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+
+      try {
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/usuarios.json?auth=${state.user.idToken}`
+        );
+        const dataDB = await res.json();
+        const arrayUsuarios = [];
+
+        if (dataDB.error) {
+          //console.log(dataDB);
+          return commit("setError", dataDB.error);
+        }
+
+        for (let id in dataDB) {
+          //console.log(id);
+          //console.log(dataDB[id]);
+          arrayUsuarios.push(dataDB[id]);
+        }
+        //console.log(arrayCompras);
+        commit("setUsuarios", arrayUsuarios);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async registroUsuario({ commit,state }, user) {
+      //console.log(user);
+
+      try {
+        const res = await fetch(
+          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCh37mmPaCWQF2osXVXPpWQ02kNz2YWMP0`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: user.email,
+              password: user.password,
+              returnSecureToken: true,
+            }),
+          }
+        );
+
+        const userDB = await res.json();
+        console.log("NuevoUsuario",userDB);
+        if (userDB.error) {
+          console.log("NuevoUsuario",userDB);
+          return commit("setError", userDB.error.message);
+        }
+        //state.local = userDB.localId
+        commit("setError", null);
+
+        
+      } catch (error) {
+        //console.log(error);
+      }
+
+      
+
+    },
+    async guardarUsuario({ commit,state}, user) {
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+      //user.id = state.local
+      try {
+        console.log("Firebase guardar usuario");
+        //console.log(state.compra);
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/usuarios/${user.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(user),
+          }
+        );
+
+        const dataDB = await res.json();
+        //console.log(dataDB);
+
+        // commit("setCompra", dataDB);
+        router.push("/usuarios");
+
       } catch (error) {
         //console.log(error);
       }

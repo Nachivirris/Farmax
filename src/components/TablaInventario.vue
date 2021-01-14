@@ -48,14 +48,14 @@
         </span>
       </b-table-column>
 
-      <b-table-column
+      <!-- <b-table-column
         field="acciones"
         label="Acciones"
         v-slot="props"
         width="250"
       >
         <div>
-          <b-button
+           <b-button
             class="mx-2"
             type="is-warning"
             @click="editarCompra(props.row)"
@@ -66,10 +66,10 @@
             label="Eliminar"
             type="is-danger"
             @click="borrarCompra(props.row)"
-          >
-          </b-button>
-        </div>
-      </b-table-column>
+          > 
+           </b-button> 
+         </div>
+      </b-table-column> -->
     </b-table>
   </div>
 </template>

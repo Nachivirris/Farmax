@@ -49,30 +49,19 @@
       <b-table-column label="Lote" v-slot="props">
         {{ props.row.lote }}
       </b-table-column>
+      <template #footer>
+        <div class="has-text-right">
+          <div class="mt-3">
+            {{ "Precio Total:" }} {{ calcularTotal() }} {{ " Bs" }}
+          </div>
+          <div class="mt-3 is-align-content-end title is-4">
+            {{ "Precio Final:" }}
+            {{ calcularTotal() - calcularTotal()  }}
+            {{ " Bs" }}
+          </div>
+        </div>
+      </template>
     </b-table>
-    <div class="mt-3 is-align-content-end title">
-      {{ "Precio Total:" }} {{ calcularTotal() }} {{ " Bs" }}
-    </div>
-
-    <div>
-      <b-field label="Descuento">
-        <b-slider
-          v-model="descuento"
-          lazy
-          :step="5"
-          :min="0"
-          :max="30"
-          size="is-medium"
-          tooltip-always
-          ticks
-          :custom-formatter="val => val + '%'"
-        >
-        </b-slider>
-      </b-field>
-    </div>
-    <div class="mt-3 is-align-content-end title">
-      {{ "Precio Final:" }} {{ calcularTotal() -calcularTotal() * (descuento/100)}} {{ " Bs" }}
-    </div>
   </div>
 </template>
 
@@ -101,7 +90,6 @@ export default {
   data() {
     return {
       checkedRows: [],
-      descuento: 0,
     };
   },
   computed: {

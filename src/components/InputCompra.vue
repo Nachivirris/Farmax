@@ -372,7 +372,6 @@ export default {
     enviarCompra() {
       const shortid = require("shortid");
 
-      this.enviarMedicamento();
 
       this.compra.proveedor = this.nuevoProveedor
         ? this.proveedor
@@ -382,6 +381,7 @@ export default {
       this.compra.total = this.calcularTotalCompras;
       this.compra.id = shortid.generate();
       this.guardarCompra(this.compra);
+      this.enviarMedicamento();
       // this.medicamentos.splice(0, this.medicamentos.length);
     },
     enviarMedicamento() {
