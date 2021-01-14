@@ -68,6 +68,14 @@ const routes = [
     meta: {
       requiresAuth: true,
     }
+  },{
+    path: "inventario/editar/:id",
+    name: "EditarMedicamento",
+
+    component: () => import("../views/EditarMedicamento.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/laboratorios",

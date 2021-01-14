@@ -48,28 +48,33 @@
         </span>
       </b-table-column>
 
-      <!-- <b-table-column
+      <b-table-column
         field="acciones"
         label="Acciones"
+        width="40"
         v-slot="props"
-        width="250"
       >
-        <div>
-           <b-button
+        <router-link
+          :to="{
+            name: 'EditarMedicamento',
+            params: { id: props.row.id },
+          }"
+        >
+          <b-button
             class="mx-2"
             type="is-warning"
-            @click="editarCompra(props.row)"
+            
           >
             Editar
           </b-button>
-          <b-button
-            label="Eliminar"
-            type="is-danger"
-            @click="borrarCompra(props.row)"
-          > 
-           </b-button> 
-         </div>
-      </b-table-column> -->
+        </router-link>
+        <b-button
+          label="Eliminar"
+          type="is-danger"
+          @click="borrarMedicamentoInventario(props.row)"
+        >
+        </b-button>
+      </b-table-column>
     </b-table>
   </div>
 </template>
@@ -81,19 +86,19 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["eliminarCompra", "cargarInventario"]),
+    ...mapActions(["eliminarMedicamentoInventario", "cargarInventario"]),
     
-    borrarCompra(fila) {
+    borrarMedicamentoInventario(fila) {
       this.$buefy.dialog.confirm({
-        title: "Borrar compra",
+        title: "Borrar Medicamento",
         message:
-          "Esta seguro de que desea <b>eliminar</b> la compra, esta accion no puede ser desecha.",
-        confirmText: "Borrar compra",
+          "Esta seguro de que desea <b>eliminar</b> el medicamento, esta accion no puede ser desecha.",
+        confirmText: "Borrar registro",
         type: "is-danger",
         hasIcon: true,
         onConfirm: () => {
-          this.$buefy.toast.open("Compra Eliminada!");
-          this.eliminarCompra(fila.id);
+          this.$buefy.toast.open("Medicamento eliminado!");
+          this.eliminarMedicamentoInventario(fila.id);
 
         },
       });

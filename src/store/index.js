@@ -171,7 +171,7 @@ export default new Vuex.Store({
     eliminarVenta(state, payload) {
       state.ventas = state.ventas.filter((item) => item.id !== payload);
     },
-    getCompra(state, payload) {
+    getVenta(state, payload) {
       if (!state.ventas.find((item) => item.id === payload)) {
         router.push("/ventas");
 
@@ -202,11 +202,23 @@ export default new Vuex.Store({
     setInventario(state, payload) {
       state.inventario = payload;
     },
+    getInventario(state, payload) {
+      if (!state.inventario.find((item) => item.id === payload)) {
+        router.push("/inventario");
+
+        return;
+      }
+
+      state.medicamento = state.inventario.find((item) => item.id === payload);
+    },
     setClientes(state, payload) {
       state.clientes = payload;
     },
     eliminarCliente(state, payload) {
       state.clientes = state.clientes.filter((item) => item.id !== payload);
+    },
+    eliminarCliente(state, payload) {
+      state.inventario = state.inventario.filter((item) => item.id !== payload);
     },
   },
   actions: {
@@ -240,7 +252,6 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-
     async cargarDatosUsuario({ commit, state }) {
       try {
         console.log("exitos");
@@ -532,6 +543,7 @@ export default new Vuex.Store({
     getVenta({ commit }, id) {
       commit("getVenta", id);
     },
+
     añadirMedicamentoLista({ commit, state }) {
       state.medicamentos.push(state.medicamento);
       state.medicamento = {
@@ -774,11 +786,30 @@ export default new Vuex.Store({
         );
 
         const dataDB = await res.json();
+        location.reload();
         //console.log(dataDB);
         // commit("actualizarInventario", dataDB);
+        
       } catch (error) {
         //console.log(error);
       }
+    },
+    async eliminarMedicamentoInventario({ commit, state }, id) {
+      try {
+        await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/inventario/${id}.json?auth=${state.user.idToken}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        commit("eliminarMedicamento", id);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    getInventario({ commit }, id) {
+      commit("getInventario", id);
     },
     async guardarCliente({ commit, state }) {
       if (localStorage.getItem("user")) {
