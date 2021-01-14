@@ -18,12 +18,22 @@ export default new Vuex.Store({
     },
     proveedor: {
       nombre: "",
-      laboratorio: {},
+      apellidos: "",
+      laboratorio: {
+        nombre: "",
+        numero: "",
+        direccion: "",
+        id:"",
+      },
       numero: 0,
+      id: ""
     },
     proveedores: [],
     laboratorio: {
       nombre: "",
+      numero: "",
+      direccion: "",
+      id:"",
     },
     laboratorios: [],
     compra: {
@@ -110,7 +120,7 @@ export default new Vuex.Store({
           mensaje: "Campo de nombre de medicamento no llenado correctamente",
         });
       }
-      console.log(state.error.message);
+      //console.log(state.error.message);
     },
     setUser(state, payload) {
       state.user = payload;
@@ -125,14 +135,30 @@ export default new Vuex.Store({
     setProveedores(state, payload) {
       state.proveedores = payload;
     },
+    
+    eliminarProveedor(state, payload) {
+      state.proveedores = state.proveedores.filter((item) => item.id !== payload);
+    },
     setLaboratorios(state, payload) {
       state.laboratorios = payload;
+    },
+    eliminarLaboratorio(state, payload) {
+      state.laboratorios = state.laboratorios.filter((item) => item.id !== payload);
     },
     setMedicamentos(state, payload) {
       state.medicamentos = payload;
     },
     setInventario(state, payload) {
       state.inventario = payload;
+    },
+    getCompra(state, payload) {
+      if (!state.compras.find((item) => item.id === payload)) {
+        router.push("/compras");
+
+        return;
+      }
+
+      state.compra = state.compras.find((item) => item.id === payload);
     },
   },
   actions: {
@@ -152,18 +178,18 @@ export default new Vuex.Store({
 
         const dataDB = await res.json();
 
-        console.log(dataDB);
+        //console.log(dataDB);
 
         if (dataDB.error) {
-          console.log(dataDB.error.message);
+          //console.log(dataDB.error.message);
           return commit("setError", dataDB.error.message);
         }
         commit("setUser", dataDB);
-        console.log("inicio");
-        console.log(state.user);
+        //console.log("inicio");
+        //console.log(state.user);
         router.push("/");
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       }
     },
     cerrarSesion({ commit }) {
@@ -178,7 +204,7 @@ export default new Vuex.Store({
     },
     verificarDatosAlmacenados({ commit, state }) {
       if (localStorage.getItem("user")) {
-        // console.log("local",localStorage.getItem("user"));
+        // //console.log("local",localStorage.getItem("user"));
         commit("setUser", JSON.parse(localStorage.getItem("user")));
         router.push("/");
       } else {
@@ -209,10 +235,10 @@ export default new Vuex.Store({
           //console.log(dataDB[id]);
           arrayCompras.push(dataDB[id]);
         }
-        console.log(arrayCompras);
+        //console.log(arrayCompras);
         commit("setCompras", arrayCompras);
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       }
     },
     async guardarCompra({ commit, state }) {
@@ -223,7 +249,7 @@ export default new Vuex.Store({
       }
 
       try {
-        console.log("Firebase compra");
+        //console.log("Firebase compra");
         //console.log(state.compra);
         const res = await fetch(
           `https://farmaxip-default-rtdb.firebaseio.com/compras/${state.compra.id}.json?auth=${state.user.idToken}`,
@@ -236,10 +262,8 @@ export default new Vuex.Store({
           }
         );
 
-
-
         const dataDB = await res.json();
-        console.log(dataDB);
+        //console.log(dataDB);
 
         // commit("setCompra", dataDB);
         router.push("/compras");
@@ -247,9 +271,7 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-    async editarCompra({commit, state}){
-
-    },
+    async editarCompra({ commit, state }) {},
     async eliminarCompra({ commit, state }, id) {
       try {
         await fetch(
@@ -264,6 +286,9 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
+    getCompra({ commit }, id) {
+      commit("getCompra", id);
+    },
     añadirMedicamentoLista({ commit, state }) {
       state.medicamentos.push(state.medicamento);
       state.medicamento = {
@@ -276,7 +301,7 @@ export default new Vuex.Store({
       };
     },
     actualizarMedicamentoLista({ commit, state }, checkedRows) {
-      console.log("entro");
+      //console.log("entro");
       commit(
         "setMedicamentos",
 
@@ -310,10 +335,54 @@ export default new Vuex.Store({
           //console.log(dataDB[id]);
           arrayProveedores.push(dataDB[id]);
         }
-        console.log(arrayProveedores);
+        //console.log(arrayProveedores);
         commit("setProveedores", arrayProveedores);
       } catch (error) {
-        console.log(error);
+        //console.log(error);
+      }
+    },
+    async eliminarProveedor({ commit, state }, id) {
+      try {
+        await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/proveedor/${id}.json?auth=${state.user.idToken}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        commit("eliminarProveedor", id);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async guardarProveedor({ commit, state }) {
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+
+      try {
+        //console.log("Firebase compra");
+        //console.log(state.compra);
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/proveedor/${state.proveedor.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(state.proveedor),
+          }
+        );
+
+        const dataDB = await res.json();
+        //console.log(dataDB);
+
+        // commit("setCompra", dataDB);
+        router.push("/proveedores");
+      } catch (error) {
+        //console.log(error);
       }
     },
     async cargarLaboratorios({ commit, state }) {
@@ -325,7 +394,7 @@ export default new Vuex.Store({
 
       try {
         const res = await fetch(
-          `https://farmaxip-default-rtdb.firebaseio.com/laboratorio.json?auth=${state.user.idToken}`
+          `https://farmaxip-default-rtdb.firebaseio.com/laboratorios.json?auth=${state.user.idToken}`
         );
         const dataDB = await res.json();
         const arrayLaboratorios = [];
@@ -340,10 +409,54 @@ export default new Vuex.Store({
           //console.log(dataDB[id]);
           arrayLaboratorios.push(dataDB[id]);
         }
-        console.log(arrayLaboratorios);
+        //console.log(arrayLaboratorios);
         commit("setLaboratorios", arrayLaboratorios);
       } catch (error) {
-        console.log(error);
+        //console.log(error);
+      }
+    },
+    async eliminarLaboratorio({ commit, state }, id) {
+      try {
+        await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/laboratorios/${id}.json?auth=${state.user.idToken}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        commit("eliminarLaboratorio", id);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async guardarLaboratorio({ commit, state }) {
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+
+      try {
+        //console.log("Firebase compra");
+        //console.log(state.compra);
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/laboratorios/${state.laboratorio.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(state.laboratorio),
+          }
+        );
+
+        const dataDB = await res.json();
+        //console.log(dataDB);
+
+        // commit("setCompra", dataDB);
+        router.push("/laboratorios");
+      } catch (error) {
+        //console.log(error);
       }
     },
     async cargarInventario({ commit, state }) {
@@ -370,13 +483,13 @@ export default new Vuex.Store({
           //console.log(dataDB[id]);
           arrayInventario.push(dataDB[id]);
         }
-        console.log(arrayInventario);
+        //console.log(arrayInventario);
         commit("setInventario", arrayInventario);
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       }
     },
-    async guardarMedicamentoInventario({commit, state},medicamento){
+    async guardarMedicamentoInventario({ commit, state }, medicamento) {
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));
       } else {
@@ -384,7 +497,7 @@ export default new Vuex.Store({
       }
 
       try {
-        console.log("Firebase inventario");
+        //console.log("Firebase inventario");
         //console.log(state.compra);
         const res = await fetch(
           `https://farmaxip-default-rtdb.firebaseio.com/inventario/${medicamento.id}.json?auth=${state.user.idToken}`,
@@ -397,13 +510,10 @@ export default new Vuex.Store({
           }
         );
 
-
-
         const dataDB = await res.json();
-        console.log(dataDB);
+        //console.log(dataDB);
 
         // commit("setCompra", dataDB);
-
       } catch (error) {
         //console.log(error);
       }
@@ -425,7 +535,6 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-    
   },
   modules: {},
   getters: {
@@ -437,7 +546,7 @@ export default new Vuex.Store({
           return false;
         }
       } catch (error) {
-        console.log("dad");
+        //console.log("dad");
         return false;
       }
     },

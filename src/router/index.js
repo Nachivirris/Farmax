@@ -37,6 +37,15 @@ const routes = [
     }
   },
   {
+    path: "compras/editar/:id",
+    name: "EditarCompra",
+
+    component: () => import("../views/EditarCompra.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/ventas",
     name: "Ventas",
     component: () => import("../views/Ventas.vue"),
@@ -48,6 +57,38 @@ const routes = [
     path: "/inventario",
     name: "Inventario",
     component: () => import("../views/Inventario.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/laboratorios",
+    name: "Laboratorios",
+    component: () => import("../views/Laboratorios.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/laboratorios/crear",
+    name: "CrearLaboratorio",
+    component: () => import("../views/CrearLaboratorio.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/proveedores",
+    name: "Proveedores",
+    component: () => import("../views/Proveedores.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/proveedores/crear",
+    name: "CrearProveedor",
+    component: () => import("../views/CrearProveedor.vue"),
     meta: {
       requiresAuth: true,
     }
@@ -71,10 +112,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) =>{
   if(to.matched.some(record => record.meta.requiresAuth)){
     if(store.getters.usuarioAutenticado){
-      console.log("entro",store.getters.usuarioAutenticado)
+      //console.log("entro",store.getters.usuarioAutenticado)
       next();
     }else{
-      console.log("pacasas",store.getters.usuarioAutenticado)
+      //console.log("pacasas",store.getters.usuarioAutenticado)
       next("/login")
     }
   }else{

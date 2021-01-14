@@ -82,9 +82,7 @@ export default {
   },
   methods: {
     ...mapActions(["eliminarCompra", "cargarInventario"]),
-    editarCompra(fila) {
-      console.log(fila);
-    },
+    
     borrarCompra(fila) {
       this.$buefy.dialog.confirm({
         title: "Borrar compra",
@@ -96,7 +94,7 @@ export default {
         onConfirm: () => {
           this.$buefy.toast.open("Compra Eliminada!");
           this.eliminarCompra(fila.id);
-          console.log(fila);
+
         },
       });
     },

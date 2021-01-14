@@ -12,11 +12,38 @@
 
       <b-menu-item
         icon="cog"
-        label="Administracion"
-        tag="router-link"
-        to="/administracion"
-        :active="tipoMenu === 'Administracion' ? true : false"
+        :active="
+          tipoMenu === 'Laboratorios' ? true : false
+        "
+        :expanded="
+          tipoMenu === 'Laboratorios'  ? true : false
+        "
       >
+        <template slot="label" slot-scope="props">
+          Administracion
+          <b-icon
+            class="is-pulled-right"
+            :icon="props.expanded ? 'menu-up' : 'menu-down'"
+          >
+          </b-icon>
+        </template>
+        <b-menu-item
+          tag="router-link"
+          to="/laboratorios"
+          icon="cash"
+          label="Laboratorio"
+          :active="tipoMenu === 'Laboratorios' ? true : false"
+        >
+        </b-menu-item>
+        <b-menu-item
+          tag="router-link"
+          to="/proveedores"
+          icon="cash"
+          label="Proveedor"
+          :active="tipoMenu === 'Proveedores' ? true : false"
+        >
+        </b-menu-item>
+        
       </b-menu-item>
 
       <b-menu-item
@@ -24,7 +51,9 @@
         :active="
           tipoMenu === 'Compras' || tipoMenu === 'CrearCompra' ? true : false
         "
-        :expanded="tipoMenu === 'CrearCompra' || tipoMenu === 'Compras'? true : false"
+        :expanded="
+          tipoMenu === 'CrearCompra' || tipoMenu === 'Compras' ? true : false
+        "
       >
         <template slot="label" slot-scope="props">
           Compras

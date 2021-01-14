@@ -76,13 +76,20 @@
         width="40"
         v-slot="props"
       >
-        <b-button
-          class="mx-2"
-          type="is-warning"
-          @click="editarCompra(props.row)"
+        <router-link
+          :to="{
+            name: 'EditarCompra',
+            params: { id: props.row.id },
+          }"
         >
-          Editar
-        </b-button>
+          <b-button
+            class="mx-2"
+            type="is-warning"
+            
+          >
+            Editar
+          </b-button>
+        </router-link>
         <b-button
           label="Eliminar"
           type="is-danger"
@@ -102,9 +109,7 @@ export default {
   },
   methods: {
     ...mapActions(["eliminarCompra"]),
-    editarCompra(fila) {
-      console.log(fila);
-    },
+
     borrarCompra(fila) {
       this.$buefy.dialog.confirm({
         title: "Borrar compra",
@@ -115,15 +120,14 @@ export default {
         hasIcon: true,
         onConfirm: () => {
           this.$buefy.toast.open("Compra Eliminada!");
-          this.eliminarCompra(fila.id)
-          console.log(fila);
+          this.eliminarCompra(fila.id);
+
         },
       });
     },
   },
   computed: {
     ...mapState(["compras"]),
-
   },
 };
 </script>

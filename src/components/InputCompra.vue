@@ -43,7 +43,7 @@
           <b-field label="Busque el Laboratorio">
             <div>
               Si no encuentra el Laboratorio y quiere crear uno, haga click
-              <router-link to="/">aqui</router-link>
+              <router-link to="/laboratorios/crear">aqui</router-link>
               <div>
                 <b-autocomplete
                   rounded
@@ -77,7 +77,7 @@
                 " " +
                 proveedorSeleccionado.apellidos +
                 " - " +
-                proveedorSeleccionado.laboratorio
+                proveedorSeleccionado.laboratorio.nombre
               }}
             </p>
 
@@ -329,7 +329,7 @@ export default {
           this.alertCustom("Proveedor no valido");
         }
       } else {
-        console.log("Ok");
+        //console.log("Ok");
       }
     },
     enviarMedicamentoLista() {
@@ -361,7 +361,7 @@ export default {
         //   vencimiento: new Date(),
         //   lote: "",
         // };
-        // return console.log("error");
+
         // this.medicamentoSeleccionado.nombre = ""
         // this.medicamentoSeleccionado.cantidad = 0
         // this.medicamentoSeleccionado.precio = 0
@@ -373,7 +373,7 @@ export default {
       const shortid = require("shortid");
 
       this.enviarMedicamento();
-      console.log(this.medicamentos);
+
       this.compra.proveedor = this.nuevoProveedor
         ? this.proveedor
         : this.proveedorSeleccionado;
@@ -387,15 +387,15 @@ export default {
     enviarMedicamento() {
       let nuevaCantidad = 0;
       this.medicamentos.forEach((med) => {
-        console.log("object", med);
+
         if (this.inventario.find((item) => item.id === med.id)) {
           this.inventario.forEach((i) => {
             if (i.id == med.id) {
-              console.log("cantidad", i.cantidad);
+
               nuevaCantidad = i.cantidad;
             }
           });
-          console.log("muevo", nuevaCantidad);
+
           med.cantidad = med.cantidad + nuevaCantidad;
           this.editarMedicamentoInventario(med);
         } else {
