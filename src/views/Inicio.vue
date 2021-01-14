@@ -1,8 +1,8 @@
 <template>
   <div class="mt-5 columns">
-    <MenuDes tipoMenu="Inicio" />
-    <div class="mt-5 title is-1 has-text-primary">
-      Bienvenido a Farmax
+    <MenuDes tipoMenu="Inicio" class="column" />
+    <div class="m-5 column">
+      <div class="title is-1 has-text-primary is-four-fifths">Inicio.</div>
     </div>
   </div>
 </template>

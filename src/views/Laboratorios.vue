@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5 columns">
-    <MenuDes tipoMenu="Compras" class="column" />
+    <MenuDes tipoMenu="Laboratorios" class="column" />
     <div class="m-5 column">
 
         <div class="title is-1 has-text-primary  is-four-fifths">Laboratorios.</div>

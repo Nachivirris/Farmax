@@ -1,5 +1,5 @@
 <template>
-  <div class=" columns">
+  <div class="mt-5 columns">
     <MenuDes tipoMenu="CrearCompra" class="column" />
     <div class="m-5 column">
       <b-button  tag="router-link" to="/compras" class="my-3"  type="is-primary" icon-left="arrow-left">Compras</b-button>
