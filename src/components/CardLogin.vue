@@ -49,10 +49,7 @@
           </b-button>
         </div>
 
-        <div class="has-text-centered m-3">
-          Si no tiene una cuenta, haga click
-          <router-link to="/">aqui</router-link>
-        </div>
+        
       </div>
       <div class="column">
         <img
@@ -73,8 +70,8 @@ export default {
   data() {
     return {
       user: {
-        email: "admin@gmail.com",
-        password: "admin1234",
+        email: "",
+        password: "",
       },
     };
   },
