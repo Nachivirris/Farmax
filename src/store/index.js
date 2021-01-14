@@ -23,17 +23,17 @@ export default new Vuex.Store({
         nombre: "",
         numero: "",
         direccion: "",
-        id:"",
+        id: "",
       },
       numero: 0,
-      id: ""
+      id: "",
     },
     proveedores: [],
     laboratorio: {
       nombre: "",
       numero: "",
       direccion: "",
-      id:"",
+      id: "",
     },
     laboratorios: [],
     compra: {
@@ -54,6 +54,12 @@ export default new Vuex.Store({
       vencimiento: new Date(),
       lote: "",
     },
+    cliente: {
+      id: "",
+      razon: "",
+      nit: "",
+    },
+    clientes: [],
   },
   mutations: {
     setError(state, payload) {
@@ -135,21 +141,30 @@ export default new Vuex.Store({
     setProveedores(state, payload) {
       state.proveedores = payload;
     },
-    
     eliminarProveedor(state, payload) {
-      state.proveedores = state.proveedores.filter((item) => item.id !== payload);
+      state.proveedores = state.proveedores.filter(
+        (item) => item.id !== payload
+      );
     },
     setLaboratorios(state, payload) {
       state.laboratorios = payload;
     },
     eliminarLaboratorio(state, payload) {
-      state.laboratorios = state.laboratorios.filter((item) => item.id !== payload);
+      state.laboratorios = state.laboratorios.filter(
+        (item) => item.id !== payload
+      );
     },
     setMedicamentos(state, payload) {
       state.medicamentos = payload;
     },
     setInventario(state, payload) {
       state.inventario = payload;
+    },
+    setClientes(state, payload) {
+      state.clientes = payload;
+    },
+    eliminarCliente(state, payload) {
+      state.clientes = state.clientes.filter((item) => item.id !== payload);
     },
     getCompra(state, payload) {
       if (!state.compras.find((item) => item.id === payload)) {
@@ -531,6 +546,80 @@ export default new Vuex.Store({
         const dataDB = await res.json();
         //console.log(dataDB);
         // commit("actualizarInventario", dataDB);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async guardarCliente({ commit, state }) {
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+
+      try {
+        //console.log("Firebase compra");
+        //console.log(state.compra);
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/clientes/${state.cliente.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(state.cliente),
+          }
+        );
+
+        const dataDB = await res.json();
+        //console.log(dataDB);
+
+        // commit("setCompra", dataDB);
+        router.push("/clientes");
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async cargarClientes({ commit, state }) {
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+
+      try {
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/clientes.json?auth=${state.user.idToken}`
+        );
+        const dataDB = await res.json();
+        const arrayClientes = [];
+
+        if (dataDB.error) {
+          //console.log(dataDB);
+          return commit("setError", dataDB.error);
+        }
+
+        for (let id in dataDB) {
+          //console.log(id);
+          //console.log(dataDB[id]);
+          arrayClientes.push(dataDB[id]);
+        }
+        //console.log(arrayInventario);
+        commit("setClientes", arrayClientes);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async eliminarCliente({ commit, state }, id) {
+      try {
+        await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/clientes/${id}.json?auth=${state.user.idToken}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        commit("eliminarCliente", id);
       } catch (error) {
         //console.log(error);
       }

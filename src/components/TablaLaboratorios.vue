@@ -42,7 +42,7 @@
         width="40"
         v-slot="props"
       >
-        <router-link
+        <!-- <router-link
           :to="{
             name: 'EditarLaboratorio',
             params: { id: props.row.id },
@@ -55,7 +55,7 @@
           >
             Editar
           </b-button>
-        </router-link>
+        </router-link> -->
         <b-button
           label="Eliminar"
           type="is-danger"

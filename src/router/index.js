@@ -94,6 +94,22 @@ const routes = [
     }
   },
   {
+    path: "/clientes",
+    name: "Clientes",
+    component: () => import("../views/Clientes.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: "/clientes/crear",
+    name: "CrearCliente",
+    component: () => import("../views/CrearCliente.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
     path: "/administracion",
     name: "Administracion",
     component: () => import("../views/Administracion.vue"),

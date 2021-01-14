@@ -13,10 +13,10 @@
       <b-menu-item
         icon="cog"
         :active="
-          tipoMenu === 'Laboratorios' ? true : false
+          tipoMenu === 'Laboratorios' || tipoMenu === 'Proveedores' || tipoMenu === 'Clientes'? true : false
         "
         :expanded="
-          tipoMenu === 'Laboratorios'  ? true : false
+          tipoMenu === 'Laboratorios' || tipoMenu === 'Proveedores' || tipoMenu === 'Clientes'? true : false
         "
       >
         <template slot="label" slot-scope="props">
@@ -41,6 +41,14 @@
           icon="cash"
           label="Proveedor"
           :active="tipoMenu === 'Proveedores' ? true : false"
+        >
+        </b-menu-item>
+        <b-menu-item
+          tag="router-link"
+          to="/clientes"
+          icon="cash"
+          label="Clientes"
+          :active="tipoMenu === 'Clientes' ? true : false"
         >
         </b-menu-item>
         
