@@ -1,37 +1,15 @@
 <template>
   <div>
-    <b-table :data="compras">
+    <b-table :data="ventas">
       <b-table-column
         sortable
         searchable
-        field="id"
-        label="ID"
+        field="cliente.nombre"
+        label="Cliente"
         width="10"
         v-slot="props"
       >
-        {{ props.row.id }}
-      </b-table-column>
-
-      <b-table-column
-        field="proveedor.laboratorio"
-        label="Laboratorio"
-        width="40"
-        searchable
-        sortable
-        v-slot="props"
-      >
-        {{ props.row.proveedor.laboratorio.nombre }}
-      </b-table-column>
-
-      <b-table-column
-        field="proveedor.nombre"
-        label="Nombre Proveedor"
-        width="40"
-        searchable
-        sortable
-        v-slot="props"
-      >
-        {{ props.row.proveedor.nombre }}
+        {{ props.row.cliente.razon }}
       </b-table-column>
 
       <b-table-column
@@ -46,7 +24,6 @@
 
         {{ props.row.medicamentos.length > 1 ? "" : "y ..." }}
       </b-table-column>
-
       <b-table-column
         field="fecha"
         label="Fecha"
@@ -82,18 +59,12 @@
             params: { id: props.row.id },
           }"
         >
-          <b-button
-            class="mx-2"
-            type="is-warning"
-            
-          >
-            Editar
-          </b-button>
+          <b-button class="mx-2" type="is-warning"> Editar </b-button>
         </router-link>
         <b-button
           label="Eliminar"
           type="is-danger"
-          @click="borrarCompra(props.row)"
+          @click="borrarVenta(props.row)"
         >
         </b-button>
       </b-table-column>
@@ -108,27 +79,30 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["eliminarCompra"]),
+    ...mapActions(["eliminarVenta", "cargarVentas"]),
 
-    borrarCompra(fila) {
+    borrarVenta(fila) {
       this.$buefy.dialog.confirm({
-        title: "Borrar compra",
+        title: "Borrar venta",
         message:
-          "Esta seguro de que desea <b>eliminar</b> la compra, esta accion no puede ser desecha.",
-        confirmText: "Borrar compra",
+          "Esta seguro de que desea <b>eliminar</b> la venta, esta accion no puede ser desecha.",
+        confirmText: "Borrar venta",
         type: "is-danger",
         hasIcon: true,
         onConfirm: () => {
-          this.$buefy.toast.open("Compra Eliminada!");
-          this.eliminarCompra(fila.id);
-
+          this.$buefy.toast.open("Venta Eliminada!");
+          this.eliminarVenta(fila.id);
         },
       });
     },
   },
   computed: {
-    ...mapState(["compras"]),
+    ...mapState(["ventas"]),
   },
+  created(){
+      this.cargarVentas()
+
+  }
 };
 </script>
 

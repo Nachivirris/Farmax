@@ -50,7 +50,7 @@ export default {
   methods: {
     ...mapActions(["eliminarCliente", "cargarClientes"]),
 
-    borrarProveedor(fila) {
+    borrarCliente(fila) {
       this.$buefy.dialog.confirm({
         title: "Borrar Cliente",
         message:

@@ -91,11 +91,38 @@
 
       <b-menu-item
         icon="printer-pos"
-        label="Ventas"
-        tag="router-link"
-        to="/ventas"
-        :active="tipoMenu === 'Ventas' ? true : false"
-      ></b-menu-item>
+        :active="
+          tipoMenu === 'Ventas' || tipoMenu === 'CrearVenta' ? true : false
+        "
+        :expanded="
+          tipoMenu === 'CrearVenta' || tipoMenu === 'Ventas' ? true : false
+        "
+      >
+        <template slot="label" slot-scope="props">
+          Ventas
+          <b-icon
+            class="is-pulled-right"
+            :icon="props.expanded ? 'menu-up' : 'menu-down'"
+          >
+          </b-icon>
+        </template>
+        <b-menu-item
+          tag="router-link"
+          to="/ventas"
+          icon="cash"
+          label="General"
+          :active="tipoMenu === 'Ventas' ? true : false"
+        >
+        </b-menu-item>
+        <b-menu-item
+          tag="router-link"
+          to="/ventas/crear"
+          icon="account"
+          label="Crear ventas"
+          :active="tipoMenu === 'CrearVenta' ? true : false"
+        >
+        </b-menu-item>
+      </b-menu-item>
 
       <b-menu-item
         icon="clipboard-list"
