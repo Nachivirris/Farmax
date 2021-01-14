@@ -26,13 +26,12 @@ export default new Vuex.Store({
       nombre: "",
     },
     laboratorios: [],
-    compra : {
-      id:"",
+    compra: {
+      id: "",
       proveedor: "",
       fecha: new Date(),
       medicamentos: [],
-      total: 0
-
+      total: 0,
     },
     compras: [],
     inventario: [],
@@ -119,6 +118,9 @@ export default new Vuex.Store({
     },
     setCompras(state, payload) {
       state.compras = payload;
+    },
+    eliminarCompra(state, payload) {
+      state.compras = state.compras.filter((item) => item.id !== payload);
     },
     setProveedores(state, payload) {
       state.proveedores = payload;
@@ -213,6 +215,55 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
+    async guardarCompra({ commit, state }) {
+      if (localStorage.getItem("user")) {
+        commit("setUser", JSON.parse(localStorage.getItem("user")));
+      } else {
+        return commit("setUser", null);
+      }
+
+      try {
+        console.log("Firebase compra");
+        //console.log(state.compra);
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/compras/${state.compra.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(state.compra),
+          }
+        );
+
+
+
+        const dataDB = await res.json();
+        console.log(dataDB);
+
+        // commit("setCompra", dataDB);
+        router.push("/compras");
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async editarCompra({commit, state}){
+
+    },
+    async eliminarCompra({ commit, state }, id) {
+      try {
+        await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/compras/${id}.json?auth=${state.user.idToken}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        commit("eliminarCompra", id);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
     añadirMedicamentoLista({ commit, state }) {
       state.medicamentos.push(state.medicamento);
       state.medicamento = {
@@ -234,6 +285,7 @@ export default new Vuex.Store({
         }, checkedRows)
       );
     },
+
     async cargarProveedores({ commit, state }) {
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));
@@ -324,7 +376,7 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
-    async guardarCompra({commit, state}){
+    async guardarMedicamentoInventario({commit, state},medicamento){
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));
       } else {
@@ -332,28 +384,48 @@ export default new Vuex.Store({
       }
 
       try {
-        console.log("Firebase compra");
+        console.log("Firebase inventario");
         //console.log(state.compra);
         const res = await fetch(
-          `https://farmaxip-default-rtdb.firebaseio.com/compras/${state.compra.id}.json?auth=${state.user.idToken}`,
+          `https://farmaxip-default-rtdb.firebaseio.com/inventario/${medicamento.id}.json?auth=${state.user.idToken}`,
           {
             method: "PUT",
             headers: {
               "Content-type": "application/json",
             },
-            body: JSON.stringify(state.compra),
+            body: JSON.stringify(medicamento),
           }
         );
+
+
 
         const dataDB = await res.json();
         console.log(dataDB);
 
         // commit("setCompra", dataDB);
-        router.push("/compras");
+
       } catch (error) {
         //console.log(error);
       }
-    }
+    },
+    async editarMedicamentoInventario({ commit, state }, medicamento) {
+      try {
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/inventario/${medicamento.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify(medicamento),
+          }
+        );
+
+        const dataDB = await res.json();
+        //console.log(dataDB);
+        // commit("actualizarInventario", dataDB);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    
   },
   modules: {},
   getters: {

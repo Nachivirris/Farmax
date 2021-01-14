@@ -67,21 +67,63 @@
         searchable
         v-slot="props"
       >
-        {{ props.row.total.toString() }}
+        {{ props.row.total.toString() }} {{ " Bs" }}
+      </b-table-column>
+
+      <b-table-column
+        field="acciones"
+        label="Acciones"
+        width="40"
+        v-slot="props"
+      >
+        <b-button
+          class="mx-2"
+          type="is-warning"
+          @click="editarCompra(props.row)"
+        >
+          Editar
+        </b-button>
+        <b-button
+          label="Eliminar"
+          type="is-danger"
+          @click="borrarCompra(props.row)"
+        >
+        </b-button>
       </b-table-column>
     </b-table>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {};
   },
-
+  methods: {
+    ...mapActions(["eliminarCompra"]),
+    editarCompra(fila) {
+      console.log(fila);
+    },
+    borrarCompra(fila) {
+      this.$buefy.dialog.confirm({
+        title: "Borrar compra",
+        message:
+          "Esta seguro de que desea <b>eliminar</b> la compra, esta accion no puede ser desecha.",
+        confirmText: "Borrar compra",
+        type: "is-danger",
+        hasIcon: true,
+        onConfirm: () => {
+          this.$buefy.toast.open("Compra Eliminada!");
+          this.eliminarCompra(fila.id)
+          console.log(fila);
+        },
+      });
+    },
+  },
   computed: {
     ...mapState(["compras"]),
+
   },
 };
 </script>

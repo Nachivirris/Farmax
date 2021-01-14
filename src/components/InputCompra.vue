@@ -223,21 +223,19 @@
           </b-field>
         </div>
       </div>
-      
+
       <b-button
         class="mt-3"
         :disabled="!verificarCamposMedicamentos"
         icon-right="check"
         type="is-primary"
         expanded
-        @click="enviarMedicamento"
+        @click="enviarMedicamentoLista"
       >
         Guardar Medicamento
       </b-button>
 
       <TablaMedicamentosCompra />
-
-      
 
       <b-button type="is-success" expanded @click="enviarCompra"
         >Enviar</b-button
@@ -290,6 +288,8 @@ export default {
       "añadirMedicamentoLista",
       "cargarInventario",
       "guardarCompra",
+      "guardarMedicamentoInventario",
+      "editarMedicamentoInventario",
     ]),
     alertCustom(mensaje) {
       this.$buefy.dialog.alert({
@@ -332,16 +332,18 @@ export default {
         console.log("Ok");
       }
     },
-    enviarMedicamento() {
+    enviarMedicamentoLista() {
       const shortid = require("shortid");
-
+      //Medicamento Nuevo
       if (this.medicamento.nombre !== "" && this.medicamentoNuevo) {
         this.medicamento.id = shortid.generate();
         this.añadirMedicamentoLista();
-      } else if (
+      } // medicamento Existente
+      else if (
         this.medicamentoSeleccionado.nombre !== "" &&
         this.medicamentoNuevo === false
       ) {
+        this.medicamento.id = this.medicamentoSeleccionado.id;
         this.medicamento.nombre = this.medicamentoSeleccionado.nombre;
         this.medicamento.cantidad = this.cantidadAñadida;
         this.medicamento.precio =
@@ -369,6 +371,9 @@ export default {
     },
     enviarCompra() {
       const shortid = require("shortid");
+
+      this.enviarMedicamento();
+      console.log(this.medicamentos);
       this.compra.proveedor = this.nuevoProveedor
         ? this.proveedor
         : this.proveedorSeleccionado;
@@ -377,6 +382,26 @@ export default {
       this.compra.total = this.calcularTotalCompras;
       this.compra.id = shortid.generate();
       this.guardarCompra(this.compra);
+      // this.medicamentos.splice(0, this.medicamentos.length);
+    },
+    enviarMedicamento() {
+      let nuevaCantidad = 0;
+      this.medicamentos.forEach((med) => {
+        console.log("object", med);
+        if (this.inventario.find((item) => item.id === med.id)) {
+          this.inventario.forEach((i) => {
+            if (i.id == med.id) {
+              console.log("cantidad", i.cantidad);
+              nuevaCantidad = i.cantidad;
+            }
+          });
+          console.log("muevo", nuevaCantidad);
+          med.cantidad = med.cantidad + nuevaCantidad;
+          this.editarMedicamentoInventario(med);
+        } else {
+          this.guardarMedicamentoInventario(med);
+        }
+      });
     },
   },
   computed: {
