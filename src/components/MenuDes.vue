@@ -1,5 +1,5 @@
 <template>
-  <b-menu class="ml-5 mt-5 column is-one-fifth">
+  <b-menu class="ml-5 mt-5 column is-one-fifth" v-if="usuario.rol !== ''">
     <b-menu-list label="Menu">
       <b-menu-item
         icon="information-outline"

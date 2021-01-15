@@ -20,6 +20,10 @@
         <div class="buttons">
           
           <!-- <a class="button is-primary is-light"> Iniciar Sesion </a> -->
+
+          <div class="m-3" v-if="usuarioAutenticado">
+            {{usuario.nombre}}
+          </div>
           <router-link to="/login">
             <b-button type="is-primary is-light" v-if="!usuarioAutenticado">
               <strong> Iniciar Sesion </strong>
@@ -39,10 +43,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   computed: {
     ...mapGetters(["usuarioAutenticado"]),
+    ...mapState(["usuario"])
   },
   methods: {
     ...mapActions(["cerrarSesion"]),

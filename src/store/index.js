@@ -51,7 +51,11 @@ export default new Vuex.Store({
       regente: {},
       fecha: new Date(),
       medicamentos: [],
-      cliente: {},
+      cliente: {
+        id: "",
+        razon: "",
+        nit: "",
+      },
       total: 0,
     },
     ventas: [],
@@ -146,6 +150,9 @@ export default new Vuex.Store({
     },
     setUsuario(state, payload) {
       state.usuario = payload;
+    },
+    eliminarUsuario(state, payload) {
+      state.usuarios = state.usuarios.filter((item) => item.id !== payload);
     },
     setUsuarios(state, payload) {
       state.usuarios = payload;
@@ -250,17 +257,15 @@ export default new Vuex.Store({
       }
     },
     async cargarDatosUsuario({ commit, state }) {
-
       // console.log(state.usuarios);
 
       state.usuarios.forEach((element) => {
         if (element === null) {
           return;
         } else if (element.email === state.user.email) {
-          state.usuario=element
+          state.usuario = element;
         }
       });
-
 
       // console.log("si",idUser);
       // try {
@@ -365,6 +370,21 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
+
+    async eliminarUsuario({ commit, state }, id) {
+      try {
+        await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/usuarios/${id}.json?auth=${state.user.idToken}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        commit("eliminarUsuario", id);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
     cerrarSesion({ commit }) {
       commit("setUser", null);
       router.push("/login");
@@ -439,8 +459,8 @@ export default new Vuex.Store({
         //console.log(dataDB);
 
         // commit("setCompra", dataDB);
-        router.push("/compras");
         location.reload();
+        router.push("/compras");
       } catch (error) {
         //console.log(error);
       }
@@ -607,11 +627,15 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-    async guardarProveedor({ commit, state }) {
+    async guardarProveedor({ commit, state }, prov) {
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));
       } else {
         return commit("setUser", null);
+      }
+
+      if (prov !== null) {
+        state.proveedor = prov;
       }
 
       try {

@@ -100,14 +100,7 @@
         </div>
       </div>
     </div>
-    prove
-    {{ proveedor }}
-    <br />
-    provesele
-    {{ proveedorSeleccionado }}
-    <br />
-    laboratorio
-    {{ laboratorio }}
+
     <b-button
       v-if="!etapa1"
       :disabled="verificarFechaProveedor"
@@ -205,7 +198,12 @@
         <div class="columns">
           <b-field class="column" label="Stock Actual">
             <div class="">
-              {{ medicamentoSeleccionado.cantidad }} {{ " unidad" }}
+              {{
+                medicamentoSeleccionado !== null
+                  ? medicamentoSeleccionado.cantidad
+                  : "-"
+              }}
+              {{ " unidad" }}
             </div>
           </b-field>
           <b-field class="column" label="Cantidad a añadir">
@@ -216,12 +214,23 @@
           </b-field>
           <b-field class="column" label="Stock Nuevo">
             <div class="">
-              {{ medicamentoSeleccionado.cantidad + cantidadAñadida }}
+              {{
+                medicamentoSeleccionado !== null
+                  ? medicamentoSeleccionado.cantidad + cantidadAñadida
+                  : "-"
+              }}
               {{ " unidad" }}
             </div>
           </b-field>
           <b-field class="column" label="Precio Actual">
-            <div class="">{{ medicamentoSeleccionado.precio }} {{ " Bs" }}</div>
+            <div class="">
+              {{
+                medicamentoSeleccionado !== null
+                  ? medicamentoSeleccionado.precio
+                  : "-"
+              }}
+              {{ " Bs" }}
+            </div>
           </b-field>
           <b-field class="column" label="Precio Nuevo">
             <b-input
@@ -237,7 +246,7 @@
 
       <b-button
         class="mt-3"
-        :disabled="!verificarCamposMedicamentos"
+        :disabled="verificarCamposMedicamentos"
         icon-right="check"
         type="is-primary"
         expanded
@@ -274,7 +283,7 @@ export default {
         id: "",
       },
       precioNuevo: 0,
-      cantidadAñadida: 0,
+      cantidadAñadida: 1,
       medicamentoNuevo: false,
       medicamentoSeleccionado: {
         id: "",
@@ -298,6 +307,7 @@ export default {
         apellidos: "",
         laboratorio: "",
         numero: 0,
+        id: ""
       },
     };
   },
@@ -310,6 +320,7 @@ export default {
       "guardarCompra",
       "guardarMedicamentoInventario",
       "editarMedicamentoInventario",
+      "guardarProveedor"
     ]),
     alertCustom(mensaje) {
       this.$buefy.dialog.alert({
@@ -327,6 +338,7 @@ export default {
     enviarMedicamentoLista() {
       const shortid = require("shortid");
       //Medicamento Nuevo
+
       if (this.medicamento.nombre !== "" && this.medicamentoNuevo) {
         this.medicamento.id = shortid.generate();
         this.añadirMedicamentoLista();
@@ -345,34 +357,32 @@ export default {
         this.medicamento.vencimiento = this.medicamentoSeleccionado.vencimiento;
         this.medicamento.lote = this.medicamentoSeleccionado.lote;
         this.añadirMedicamentoLista();
-        // this.medicamentoSeleccionado = {
-        //   id: "",
-        //   nombre: "",
-        //   cantidad: 0,
-        //   precio: 1,
-        //   vencimiento: new Date(),
-        //   lote: "",
-        // };
 
-        // this.medicamentoSeleccionado.nombre = ""
-        // this.medicamentoSeleccionado.cantidad = 0
-        // this.medicamentoSeleccionado.precio = 0
         this.precioNuevo = 0;
         this.cantidadAñadida = 1;
       }
     },
     enviarCompra() {
       const shortid = require("shortid");
+      if (this.medicamentos !== null && this.medicamentos.length > 0) {
+        this.proveedor.laboratorio = this.laboratorio
+        this.proveedor.id = shortid.generate()
+        this.compra.proveedor = this.nuevoProveedor
+          ? this.proveedor
+          : this.proveedorSeleccionado;
+        this.compra.fecha = this.datetime;
+        this.compra.medicamentos = this.medicamentos;
+        this.compra.total = this.calcularTotalCompras;
+        this.compra.id = shortid.generate();
+        this.guardarCompra(this.compra);
+        this.enviarMedicamento();
+        this.guardarProveedor(this.proveedor);
 
-      this.compra.proveedor = this.nuevoProveedor
-        ? this.proveedor
-        : this.proveedorSeleccionado;
-      this.compra.fecha = this.datetime;
-      this.compra.medicamentos = this.medicamentos;
-      this.compra.total = this.calcularTotalCompras;
-      this.compra.id = shortid.generate();
-      this.guardarCompra(this.compra);
-      this.enviarMedicamento();
+      }else{
+        this.alertCustom("Error al enviar la compra")
+      }
+
+
       // this.medicamentos.splice(0, this.medicamentos.length);
     },
     enviarMedicamento() {
@@ -438,29 +448,25 @@ export default {
       });
     },
     verificarCamposMedicamentos() {
-      // if (this.medicamento === null || this.medicamentoSeleccionado === null) {
-      //   return false;
-      // }
-      // else if (this.cantidadAñadida === 0 || this.precioNuevo === 0) {
-      //   return true;
-      // }
-      // else if(this.medicamento.nombre === "" || this.medicamentoSeleccionado.nombre === ""){
-      //   return true
-      // }
-      // else if (
-      //   this.medicamento.nombre.trim() !== "" &&
-      //   this.medicamento.cantidad > 0 &&
-      //   this.medicamento.precio > 0 &&
-      //   this.medicamento.lote.trim() !== "" &&
-      //   this.medicamento.vencimiento > new Date()
-      // ) {
-      //   return true;
-      // } else if (this.medicamentoSeleccionado.nombre !== "") {
-      //   return true;
-      // } else {
-      //   return false;
-      // }
-      return true;
+      if (!this.medicamentoNuevo) {
+        if (
+          this.medicamentoSeleccionado !== null &&
+          this.medicamentoSeleccionado.nombre !== ""
+        ) {
+          if (
+            this.cantidadAñadida >= 1 &&
+            (this.precioNuevo > 0 || this.precioNuevo === 0)
+          ) {
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
     },
     verificarFechaProveedor() {
       if (
@@ -470,7 +476,8 @@ export default {
       ) {
         if (!this.nuevoProveedor && this.proveedorSeleccionado.nombre !== "") {
           return false;
-        } if (this.nuevoProveedor) {
+        }
+        if (this.nuevoProveedor) {
           if (
             this.laboratorio !== null &&
             this.laboratorio.nombre !== "" &&
@@ -479,14 +486,14 @@ export default {
             this.proveedor.apellidos.trim() !== "" &&
             this.validarTexto(this.proveedor.apellidos) &&
             this.proveedor.numero.toString().trim().length > 6 &&
-            this.proveedor.numero.toString().trim().length < 9 
+            this.proveedor.numero.toString().trim().length < 9
           ) {
             return false;
           } else {
             return true;
           }
-        }else{
-          return true
+        } else {
+          return true;
         }
       } else {
         return true;

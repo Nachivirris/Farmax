@@ -59,6 +59,7 @@
         icon-left="arrow-right"
         type="is-success"
         expanded
+        :disabled="verificarCampos"
         @click="enviarUsuario"
         >Guardar Usuario</b-button
       >
@@ -67,7 +68,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 import MenuDes from "../components/MenuDes";
 
 export default {
@@ -87,16 +88,34 @@ export default {
     MenuDes,
   },
   methods: {
-    ...mapActions(["registroUsuario","guardarUsuario"]),
+    ...mapActions(["registroUsuario", "guardarUsuario"]),
     enviarUsuario() {
       const shortid = require("shortid");
       this.usuario.id = shortid.generate();
       this.registroUsuario(this.usuario);
-      this.usuario.password = ""
+      this.usuario.password = "";
       this.guardarUsuario(this.usuario);
     },
+    validarEmail(email) {
+      const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      return re.test(String(email).toLowerCase());
+    },
   },
-
+  computed: {
+    verificarCampos() {
+      if (
+        this.usuario.nombre.trim() !== "" &&
+        this.usuario.apellidos.trim() !== "" &&
+        this.usuario.email.trim() !== null &&
+        this.validarEmail(this.usuario.email) && 
+        this.usuario.rol !== ""
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+  },
   created() {},
 };
 </script>

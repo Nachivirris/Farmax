@@ -1,6 +1,7 @@
 <template>
   <div>
-    <b-table :data="compras">
+    <b-table :data="compras" default-sort="fecha"
+>
       <b-table-column
         sortable
         searchable
@@ -87,7 +88,7 @@
             type="is-warning"
             
           >
-            Editar
+            Ver
           </b-button> -->
         </router-link>
         <b-button
