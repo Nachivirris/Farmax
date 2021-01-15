@@ -25,13 +25,13 @@
         </b-field>
       </div>
       <div class="column mt-3">
-        <b-checkbox
+        <b-switch
           v-if="!etapa1"
           :disabled="proveedor.nombre !== '' ? true : false"
           v-model="nuevoProveedor"
         >
           Es un nuevo proveedor?
-        </b-checkbox>
+        </b-switch>
         <!-- NUEVO PROVEEDOR -->
         <div v-if="nuevoProveedor">
           <b-field label="Nombre">
