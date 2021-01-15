@@ -18,10 +18,12 @@ export default {
     Navbar
   },
   methods:{
-    ...mapActions(["verificarDatosAlmacenados"])
+    ...mapActions(["verificarDatosAlmacenados","cargarDatosUsuario", "cargarUsuarios"]),
   },
   created(){
     this.verificarDatosAlmacenados()
+    this.cargarUsuarios();
+    this.cargarDatosUsuario();
   }
 }
 </script>

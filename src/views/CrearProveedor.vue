@@ -62,23 +62,30 @@
               </div>
             </div>
           </b-field> -->
-          <b-field  label="Busque un Laboratorio">
-              <b-autocomplete
-                rounded
-                v-model="proveedor.laboratorio.nombre"
-                placeholder="e.g. Bago"
-                :open-on-focus="true"
-                :data="laboratoriosFiltrados"
-                icon="magnify"
-                field="nombre"
-                @select="(option) => (proveedor.laboratorio = option)"
-              >
-              </b-autocomplete>
-            </b-field>
+          <b-field label="Busque un Laboratorio">
+            <b-autocomplete
+              rounded
+              v-model="name"
+              placeholder="Ej. Nombre Laboratorio"
+              :open-on-focus="true"
+              :data="laboratoriosFiltrados"
+              icon="magnify"
+              field="nombre"
+              clearable
+              @select="(option) => (laboratorio = option)"
+            >
+            </b-autocomplete>
+          </b-field>
         </div>
       </div>
+      
       <div>
-        <b-button expanded type="is-success" @click="enviarProveedor">
+        <b-button
+          expanded
+          :disabled="verificarDatos"
+          type="is-success"
+          @click="enviarProveedor"
+        >
           Guardar Proveedor
         </b-button>
       </div>
@@ -91,6 +98,17 @@ import { mapActions, mapState } from "vuex";
 import MenuDes from "../components/MenuDes";
 
 export default {
+  data() {
+    return {
+      name:"",
+      laboratorio: {
+        nombre: "",
+        numero: "",
+        direccion: "",
+        id: "",
+      },
+    };
+  },
   components: {
     MenuDes,
   },
@@ -99,7 +117,13 @@ export default {
     enviarProveedor() {
       const shortid = require("shortid");
       this.proveedor.id = shortid.generate();
+      this.proveedor.laboratorio = this.laboratorio;
+
       this.guardarProveedor();
+    },
+    validarTexto(texto) {
+      const re = /^[A-Za-z &]+$/;
+      return re.test(String(texto).toLowerCase());
     },
   },
   computed: {
@@ -110,9 +134,25 @@ export default {
           option.nombre
             .toString()
             .toLowerCase()
-            .indexOf(this.proveedor.laboratorio.nombre.toLowerCase()) >= 0
+            .indexOf(this.name.toLowerCase()) >= 0
         );
       });
+    },
+    verificarDatos() {
+      if (
+        this.proveedor.nombre.trim() !== "" &&
+        this.proveedor.apellidos.trim() !== "" &&
+        this.validarTexto(this.proveedor.nombre) &&
+        this.validarTexto(this.proveedor.apellidos) &&
+        this.proveedor.numero.toString().length > 6 &&
+        this.proveedor.numero.toString().length < 9 &&
+        this.laboratorio !== null &&
+        this.laboratorio.nombre.trim() !== ""
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     },
   },
   created() {

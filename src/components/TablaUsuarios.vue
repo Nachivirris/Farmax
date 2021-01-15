@@ -60,15 +60,15 @@ export default {
 
     borrarCliente(fila) {
       this.$buefy.dialog.confirm({
-        title: "Borrar Cliente",
+        title: "Borrar usuario",
         message:
-          "Esta seguro de que desea <b>eliminar</b> el Cliente, esta accion no puede ser desecha.",
-        confirmText: "Borrar Cliente",
+          "Esta seguro de que desea <b>eliminar</b> el usuario, esta accion no puede ser desecha.",
+        confirmText: "Borrar usuario",
         type: "is-danger",
         hasIcon: true,
         onConfirm: () => {
-          this.$buefy.toast.open("Cliente Eliminado!");
-          this.eliminarCliente(fila.id);
+          this.$buefy.toast.open("Usuario eliminado!");
+          this.eliminarUsuario(fila.id);
         },
       });
     },
@@ -78,7 +78,7 @@ export default {
   },
   created() {
     this.cargarUsuarios();
-    console.log("usuarios", this.usuarios);
+
   },
 };
 </script>

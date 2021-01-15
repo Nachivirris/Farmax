@@ -71,7 +71,7 @@ export default new Vuex.Store({
       nit: "",
     },
     clientes: [],
-    local:""
+    local: "",
   },
   mutations: {
     setError(state, payload) {
@@ -217,9 +217,6 @@ export default new Vuex.Store({
     eliminarCliente(state, payload) {
       state.clientes = state.clientes.filter((item) => item.id !== payload);
     },
-    eliminarCliente(state, payload) {
-      state.inventario = state.inventario.filter((item) => item.id !== payload);
-    },
   },
   actions: {
     async iniciarSesion({ commit }, user) {
@@ -253,24 +250,33 @@ export default new Vuex.Store({
       }
     },
     async cargarDatosUsuario({ commit, state }) {
-      try {
-        console.log("exitos");
-        const respuesta = await fetch(
-          `https://farmaxip-default-rtdb.firebaseio.com/usuarios/${state.user.localId}.json?auth=${state.user.idToken}`
-        );
-        const userDB = await respuesta.json();
+      console.log("so");
+      // console.log(state.usuarios);
 
-        if (userDB.error) {
-          //console.log(dataDB);
-          return commit("setError", userDB.error);
+      state.usuarios.forEach((element) => {
+        if (element === null) {
+          return;
+        } else if (element.email === state.user.email) {
+          state.usuario=element
         }
+      });
+      // console.log("si",idUser);
+      // try {
+      //   const respuesta = await fetch(
+      //     `https://farmaxip-default-rtdb.firebaseio.com/usuarios/${state.user.localId}.json?auth=${state.user.idToken}`
+      //   );
+      //   const userDB = await respuesta.json();
 
-        // console.log(userDB);
-        commit("setUsuario", userDB);
+      //   if (userDB.error) {
+      //     //console.log(dataDB);
+      //     return commit("setError", userDB.error);
+      //   }
 
-      } catch (error) {
-        //console.log(error);
-      }
+      //   // console.log(userDB);
+      //   commit("setUsuario", userDB);
+      // } catch (error) {
+      //   //console.log(error);
+      // }
     },
     async cargarUsuarios({ commit, state }) {
       if (localStorage.getItem("user")) {
@@ -302,7 +308,7 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-    async registroUsuario({ commit,state }, user) {
+    async registroUsuario({ commit, state }, user) {
       //console.log(user);
 
       try {
@@ -319,23 +325,16 @@ export default new Vuex.Store({
         );
 
         const userDB = await res.json();
-        console.log("NuevoUsuario",userDB);
         if (userDB.error) {
-          console.log("NuevoUsuario",userDB);
           return commit("setError", userDB.error.message);
         }
         //state.local = userDB.localId
         commit("setError", null);
-
-        
       } catch (error) {
         //console.log(error);
       }
-
-      
-
     },
-    async guardarUsuario({ commit,state}, user) {
+    async guardarUsuario({ commit, state }, user) {
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));
       } else {
@@ -343,7 +342,6 @@ export default new Vuex.Store({
       }
       //user.id = state.local
       try {
-        console.log("Firebase guardar usuario");
         //console.log(state.compra);
         const res = await fetch(
           `https://farmaxip-default-rtdb.firebaseio.com/usuarios/${user.id}.json?auth=${state.user.idToken}`,
@@ -361,7 +359,6 @@ export default new Vuex.Store({
 
         // commit("setCompra", dataDB);
         router.push("/usuarios");
-
       } catch (error) {
         //console.log(error);
       }
@@ -378,7 +375,7 @@ export default new Vuex.Store({
     },
     verificarDatosAlmacenados({ commit, state }) {
       if (localStorage.getItem("user")) {
-        // //console.log("local",localStorage.getItem("user"));
+        //console.log("local",localStorage.getItem("user"));
         commit("setUser", JSON.parse(localStorage.getItem("user")));
         router.push("/");
       } else {
@@ -789,7 +786,6 @@ export default new Vuex.Store({
         location.reload();
         //console.log(dataDB);
         // commit("actualizarInventario", dataDB);
-        
       } catch (error) {
         //console.log(error);
       }

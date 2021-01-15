@@ -1,8 +1,8 @@
 <template>
   <div class="card">
     <div class="card-header mx-auto">
-      <h1 class="card-header-title is-size-1-mobile has-text-primary">
-        BIENVENIDO A
+      <h1 class="m-2 title has-text-primary is-2 is-four-fifths">
+        Bienvenido a.
 
         <img
           src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Farmax_LT.svg?alt=media&token=4fa00881-ac50-41d2-be91-be3e5e59256b"
@@ -15,9 +15,13 @@
     </div>
     <div class="card-content columns">
       <div class="has-text-left column">
-        Si ya tiene una cuenta inicie sesion
-        <b-notification v-if="error.tipo !== null " type="is-danger" has-icon role="alert">
-          {{ error.mensaje}}
+        <b-notification
+          v-if="error.tipo !== null"
+          type="is-danger"
+          has-icon
+          role="alert"
+        >
+          {{ error.mensaje }}
         </b-notification>
         <section class="has-text-black mt-5">
           <b-field label="Correo electronico">
@@ -48,8 +52,6 @@
             Inicia sesion
           </b-button>
         </div>
-
-        
       </div>
       <div class="column">
         <img
@@ -58,7 +60,6 @@
         />
       </div>
     </div>
-
   </div>
 </template>
 

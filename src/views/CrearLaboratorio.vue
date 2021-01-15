@@ -19,6 +19,7 @@
           <section>
             <b-field label="Nombre del laboratorio">
               <b-input
+                type="text"
                 v-model="laboratorio.nombre"
                 placeholder="Nombre del laboratorio"
               ></b-input>
@@ -43,8 +44,14 @@
           </b-field>
         </div>
       </div>
+
       <div>
-        <b-button expanded type="is-success" @click="enviarLaboratorio">
+        <b-button
+          expanded
+          type="is-success"
+          @click="enviarLaboratorio"
+          :disabled="verificarDatos"
+        >
           Guardar Laboratorio
         </b-button>
       </div>
@@ -67,9 +74,26 @@ export default {
       this.laboratorio.id = shortid.generate();
       this.guardarLaboratorio();
     },
+    validarTexto(texto) {
+      const re = /^[A-Za-z &]+$/;
+      return re.test(String(texto).toLowerCase());
+    },
   },
   computed: {
     ...mapState(["laboratorio"]),
+    verificarDatos() {
+      if (
+        this.laboratorio.nombre.trim() !== "" &&
+        this.validarTexto(this.laboratorio.nombre) &&
+        this.laboratorio.numero.toString().length > 6 &&
+        this.laboratorio.numero.toString().length < 9 &&
+        this.laboratorio.direccion.trim() !== ""
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   created() {},
 };

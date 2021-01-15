@@ -2,7 +2,7 @@
   <div class="mt-5 columns">
     <MenuDes tipoMenu="Inicio" class="column" />
     <div class="m-5 column">
-      <div class="title is-1 has-text-primary is-four-fifths">BIENVENIDO A.</div>
+      <div class="title has-text-primary is-four-fifths">BIENVENIDO A.</div>
       <!-- <div class="title is-3 ">Bienvenido a: </div> -->
       <div>
         <img

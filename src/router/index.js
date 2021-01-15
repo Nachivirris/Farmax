@@ -1,12 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { createLogger } from "vuex";
 import store from "../store"
 
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/",
+    name: "Inicio",
+    component: () => import("../views/Inicio.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
   {
     path: "/",
     name: "Inicio",
@@ -148,6 +155,15 @@ const routes = [
     meta: {
       requiresAuth: true,
     }
+  },
+  {
+    path: "/404",
+    name: "404",
+    component: () => import("../views/404.vue")
+  },
+  {
+    path: "*",
+    redirect: "/404"
   }
 ];
 

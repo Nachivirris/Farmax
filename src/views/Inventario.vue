@@ -1,8 +1,8 @@
 <template>
   <div class="mt-5 columns">
-    <MenuDes tipoMenu="Inventario" />
-    <div>
-      <div class="mt-5 title is-1 has-text-primary">INVENTARIO</div>
+    <MenuDes tipoMenu="Inventario" class="column"/>
+    <div class="m-5 column">
+      <div class="title is-1 has-text-primary  is-four-fifths">Inventario.</div>
       <div>
         <TablaInventario/>
       </div>

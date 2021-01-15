@@ -29,7 +29,7 @@
             rounded
             v-model="cliente.nit"
             :data="clientesFiltrados"
-            placeholder="e.g. 12345678"
+            placeholder="Ej. Numero de Carnet"
             icon="magnify"
             :open-on-focus="true"
             clearable
@@ -53,7 +53,7 @@
           class="my-3"
           rounded
           v-model="medicamentoSeleccionado.nombre"
-          placeholder="e.g. Dexametasona"
+          placeholder="Ej. Nombre Medicamento"
           keep-first
           :open-on-focus="true"
           :data="medicamentosFiltrados"
@@ -153,7 +153,7 @@ export default {
       this.venta.id = shortid.generate();
       this.venta.regente = this.usuario;
       //   this.guardarCompra(this.venta);
-      console.log(this.venta);
+
       this.guardarVenta();
       this.enviarMedicamento();
       // this.medicamentos.splice(0, this.medicamentos.length);
@@ -171,7 +171,7 @@ export default {
           med.cantidad = nuevaCantidad - med.cantidad;
           this.editarMedicamentoInventario(med);
         } else {
-          console.log("Tu no deberias estar aqui");
+          // console.log("Error");
         }
       });
     },

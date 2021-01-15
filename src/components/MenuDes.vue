@@ -11,13 +11,23 @@
       </b-menu-item>
 
       <b-menu-item
-      v-if="usuario.rol === 'admin'"
+        v-if="usuario.rol === 'admin'"
         icon="cog"
         :active="
-          tipoMenu === 'Laboratorios' || tipoMenu === 'Proveedores' || tipoMenu === 'Clientes' || tipoMenu === 'Usuarios'? true : false
+          tipoMenu === 'Laboratorios' ||
+          tipoMenu === 'Proveedores' ||
+          tipoMenu === 'Clientes' ||
+          tipoMenu === 'Usuarios'
+            ? true
+            : false
         "
         :expanded="
-          tipoMenu === 'Laboratorios' || tipoMenu === 'Proveedores' || tipoMenu === 'Clientes' || tipoMenu === 'Usuarios'? true : false
+          tipoMenu === 'Laboratorios' ||
+          tipoMenu === 'Proveedores' ||
+          tipoMenu === 'Clientes' ||
+          tipoMenu === 'Usuarios'
+            ? true
+            : false
         "
       >
         <template slot="label" slot-scope="props">
@@ -60,11 +70,10 @@
           :active="tipoMenu === 'Usuarios' ? true : false"
         >
         </b-menu-item>
-        
       </b-menu-item>
 
       <b-menu-item
-      v-if="usuario.rol === 'admin'"
+        v-if="usuario.rol === 'admin'"
         icon="cash"
         :active="
           tipoMenu === 'Compras' || tipoMenu === 'CrearCompra' ? true : false
@@ -146,19 +155,20 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 export default {
   props: {
     tipoMenu: String,
   },
-  methods:{
-    ...mapActions(["cargarDatosUsuario"])
+  methods: {
+    ...mapActions(["cargarDatosUsuario", "cargarUsuarios"]),
   },
-  computed: {...mapState(["usuario"])},
-  created(){
-    this.cargarDatosUsuario()
-    console.log(this.usuario.rol);
-  }
+  computed: { ...mapState(["usuario"]) },
+  created() {
+    this.cargarUsuarios();
+    this.cargarDatosUsuario();
+    
+  },
 };
 </script>
 

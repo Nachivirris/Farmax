@@ -49,7 +49,7 @@
                   rounded
                   v-model="proveedor.laboratorio"
                   :data="laboratoriosFiltrados"
-                  placeholder="e.g. Bago"
+                  placeholder="Ej. Nombre Laboratorio"
                   icon="magnify"
                   clearable
                   @select="(option) => (selected = option)"
@@ -85,7 +85,7 @@
               <b-autocomplete
                 rounded
                 v-model="proveedor.nombre"
-                placeholder="e.g. Juan Carranza"
+                placeholder="Ej. Nombre Apellido"
                 :open-on-focus="true"
                 :data="proveedoresFiltrados"
                 field="nombre"
@@ -183,7 +183,7 @@
             class="my-3"
             rounded
             v-model="medicamentoSeleccionado.nombre"
-            placeholder="e.g. Dexametasona"
+            placeholder="Ej. Nombre medicamento"
             keep-first
             :open-on-focus="true"
             :data="medicamentosFiltrados"
