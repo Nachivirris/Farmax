@@ -1,9 +1,9 @@
 <template>
   <b-navbar type="" shadow fixed-top class="">
     <template slot="start">
-      <router-link to="/">
+      <router-link to="/inicio">
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Farmax_LT.svg?alt=media&token=4fa00881-ac50-41d2-be91-be3e5e59256b"
+          src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Recurso_13.png?alt=media&token=13e6af75-a20b-449b-b986-6fbad6684f4e"
           alt="IDK"
           width="100"
           height=""

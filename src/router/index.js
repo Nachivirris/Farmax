@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/inicio",
     name: "Inicio",
     component: () => import("../views/Inicio.vue"),
     meta: {
@@ -16,8 +16,8 @@ const routes = [
   },
   {
     path: "/",
-    name: "Inicio",
-    component: () => import("../views/Inicio.vue"),
+    name: "Bienvenida",
+    component: () => import("../views/Bienvenida.vue"),
     meta: {
       requiresAuth: true,
     }

@@ -70,7 +70,7 @@
         <!-- PROVEEDOR EXISTENTE -->
         <div v-if="!nuevoProveedor">
           <section>
-            <p class="content">
+            <p  v-if="proveedorSeleccionado.nombre !==''"  class="content">
               <b> Proveedor: </b>
               {{
                 proveedorSeleccionado.nombre +

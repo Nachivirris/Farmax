@@ -5,7 +5,7 @@
         icon="information-outline"
         label="Inicio"
         tag="router-link"
-        to="/"
+        to="/inicio"
         :active="tipoMenu === 'Inicio' ? true : false"
       >
       </b-menu-item>

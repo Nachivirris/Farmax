@@ -4,13 +4,13 @@
     <div class="m-5 column">
       <div class="title has-text-primary is-four-fifths">BIENVENIDO A.</div>
       <!-- <div class="title is-3 ">Bienvenido a: </div> -->
-      <div>
-        <img
-          src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Farmax_LT.svg?alt=media&token=4fa00881-ac50-41d2-be91-be3e5e59256b"
+      <div class="">
+        <img 
+          src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Recurso_13.png?alt=media&token=13e6af75-a20b-449b-b986-6fbad6684f4e"
           alt="IDK"
           width="500"
           height=""
-          class="m-6"
+          class="m-6 "
         />
         <img
           src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/undraw_medical_care_movn.png?alt=media&token=e2258b1e-6531-4a18-bb65-f9b20703e2e9"
