@@ -42,15 +42,11 @@
       </div>
       <div class="column">
         <b-field label="Razon Social">
-          <b-input type="text" v-model="clienteNuevo.razon"></b-input>
-        </b-field>
-      </div>
-      <div class="column">
-        <b-field label="Complemento">
-          <b-input type="text" v-model="complemento"></b-input>
+          <b-input type="text" :v-model="clienteNuevo !== null ? clienteNuevo.razon : error"></b-input>
         </b-field>
       </div>
     </div>
+    {{clienteNuevo}}
     <div>
       <b-field label="Busque un Medicamento">
         <b-autocomplete
@@ -138,7 +134,6 @@ export default {
   },
   data() {
     return {
-      complemento: "",
       autonit: "",
       auto: "",
       datetime: new Date(),
@@ -156,6 +151,7 @@ export default {
         lote: "",
       },
       cantidadDisminuida: 1,
+      error: "ff",
     };
   },
   methods: {
@@ -165,6 +161,7 @@ export default {
       "añadirMedicamentoLista",
       "guardarVenta",
       "editarMedicamentoInventario",
+      "reset",
     ]),
     enviarMedicamentoLista() {
       this.medicamento.cantidad = this.cantidadDisminuida;
@@ -182,7 +179,8 @@ export default {
       if (
         this.medicamentos !== null &&
         this.medicamentos.length > 0 &&
-        (this.complemento.length < 2 || this.complemento !== "")
+        this.clienteNuevo.nit > 0 &&
+        this.clienteNuevo.razon.trim() !== ""
       ) {
         this.venta.cliente = this.clienteNuevo;
         this.venta.fecha = this.datetime;
@@ -191,7 +189,7 @@ export default {
         this.venta.id = shortid.generate();
         this.venta.regente = this.usuario;
         //   this.guardarCompra(this.venta);
-        console.log(this.clienteNuevo, this.complemento);
+
         // this.guardarVenta();
         // this.enviarMedicamento();
         // this.medicamentos.splice(0, this.medicamentos.length);

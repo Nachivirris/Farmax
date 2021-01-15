@@ -225,6 +225,82 @@ export default new Vuex.Store({
     eliminarCliente(state, payload) {
       state.clientes = state.clientes.filter((item) => item.id !== payload);
     },
+    reset(state) {
+      state = {
+        error: {
+          tipo: null,
+          mensaje: "",
+        },
+        user: {},
+        usuario: {
+          id: "",
+          email: "",
+          rol: "",
+          nombre: "",
+          apellidos: "",
+          token: "",
+        },
+        usuarios: [],
+        proveedor: {
+          nombre: "",
+          apellidos: "",
+          laboratorio: {
+            nombre: "",
+            numero: "",
+            direccion: "",
+            id: "",
+          },
+          numero: 0,
+          id: "",
+        },
+        proveedores: [],
+        laboratorio: {
+          nombre: "",
+          numero: "",
+          direccion: "",
+          id: "",
+        },
+        laboratorios: [],
+        compra: {
+          id: "",
+          proveedor: "",
+          fecha: new Date(),
+          medicamentos: [],
+          total: 0,
+        },
+        compras: [],
+        venta: {
+          id: "",
+          regente: {},
+          fecha: new Date(),
+          medicamentos: [],
+          cliente: {
+            id: "",
+            razon: "",
+            nit: "",
+          },
+          total: 0,
+        },
+        ventas: [],
+        inventario: [],
+        medicamentos: [],
+        medicamento: {
+          id: "",
+          nombre: "",
+          cantidad: 1,
+          precio: 1,
+          vencimiento: new Date(),
+          lote: "",
+        },
+        cliente: {
+          id: "",
+          razon: "",
+          nit: "",
+        },
+        clientes: [],
+        token: "",
+      };
+    },
   },
   actions: {
     async iniciarSesion({ commit }, user) {
@@ -388,15 +464,14 @@ export default new Vuex.Store({
       }
     },
     async eliminarUsuarioAuth({ commit, state }, id) {
-
       try {
         const res = await fetch(
           `https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyCh37mmPaCWQF2osXVXPpWQ02kNz2YWMP0`,
           {
             method: "POST",
             body: JSON.stringify({
-              idToken : id
-            })
+              idToken: id,
+            }),
           }
         );
 
@@ -404,7 +479,6 @@ export default new Vuex.Store({
         if (userDB.error) {
           return commit("setError", userDB.error.message);
         }
-
       } catch (error) {
         //console.log(error);
       }
@@ -483,7 +557,7 @@ export default new Vuex.Store({
         //console.log(dataDB);
 
         // commit("setCompra", dataDB);
-        location.reload();
+        //commit("reset")
         router.push("/compras");
       } catch (error) {
         //console.log(error);
@@ -562,8 +636,8 @@ export default new Vuex.Store({
         //console.log(dataDB);
 
         // commit("setCompra", dataDB);
+        //commit("reset")
         router.push("/ventas");
-        location.reload();
       } catch (error) {
         //console.log(error);
       }
@@ -587,6 +661,11 @@ export default new Vuex.Store({
       commit("getVenta", id);
     },
     añadirMedicamentoLista({ commit, state }) {
+
+      state.medicamentos = state.medicamentos.filter(element => {
+        element.id !== state.medicamento.id
+      })
+
       state.medicamentos.push(state.medicamento);
       state.medicamento = {
         id: "",
@@ -680,8 +759,8 @@ export default new Vuex.Store({
         //console.log(dataDB);
 
         // commit("setCompra", dataDB);
-        router.push("/proveedores");
-        location.reload();
+        //commit("reset")
+        
       } catch (error) {
         //console.log(error);
       }
@@ -755,8 +834,9 @@ export default new Vuex.Store({
         //console.log(dataDB);
 
         // commit("setCompra", dataDB);
+        //commit("reset")
         router.push("/laboratorios");
-        location.reload();
+
       } catch (error) {
         //console.log(error);
       }
@@ -831,7 +911,7 @@ export default new Vuex.Store({
         );
 
         const dataDB = await res.json();
-        location.reload();
+        //commit("reset")
         //console.log(dataDB);
         // commit("actualizarInventario", dataDB);
       } catch (error) {
@@ -881,7 +961,7 @@ export default new Vuex.Store({
 
         // commit("setCompra", dataDB);
         router.push("/clientes");
-        location.reload();
+        //commit("reset")
       } catch (error) {
         //console.log(error);
       }
@@ -929,6 +1009,9 @@ export default new Vuex.Store({
       } catch (error) {
         //console.log(error);
       }
+    },
+    reset({ commit }) {
+      //commit("reset");
     },
   },
   modules: {},

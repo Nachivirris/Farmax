@@ -1,10 +1,13 @@
 <template>
   <div>
-    <b-table :data="compras" default-sort="fecha"
->
+    <b-switch v-model="buscar">
+      <b-icon icon="magnify"></b-icon>
+      Buscar?
+    </b-switch>
+    <b-table :data="compras" default-sort="fecha">
       <b-table-column
         sortable
-        searchable
+        :searchable="buscar"
         field="id"
         label="ID"
         width="10"
@@ -17,7 +20,7 @@
         field="proveedor.laboratorio"
         label="Laboratorio"
         width="40"
-        searchable
+        :searchable="buscar"
         sortable
         v-slot="props"
       >
@@ -28,7 +31,7 @@
         field="proveedor.nombre"
         label="Nombre Proveedor"
         width="40"
-        searchable
+        :searchable="buscar"
         sortable
         v-slot="props"
       >
@@ -40,7 +43,6 @@
         label="Medicamentos"
         width="40"
         sortable
-        
         v-slot="props"
       >
         {{ props.row.medicamentos[0].nombre }}
@@ -52,7 +54,7 @@
         field="fecha"
         label="Fecha"
         width="40"
-        searchable
+        :searchable="buscar"
         sortable
         v-slot="props"
       >
@@ -65,7 +67,7 @@
         field="total"
         label="Total"
         width="40"
-        searchable
+        :searchable="buscar"
         v-slot="props"
       >
         {{ props.row.total.toString() }} {{ " Bs" }}
@@ -106,7 +108,9 @@
 import { mapActions, mapState } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      buscar: false,
+    };
   },
   methods: {
     ...mapActions(["eliminarCompra"]),
@@ -122,7 +126,6 @@ export default {
         onConfirm: () => {
           this.$buefy.toast.open("Compra Eliminada!");
           this.eliminarCompra(fila.id);
-
         },
       });
     },

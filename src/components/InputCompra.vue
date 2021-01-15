@@ -24,7 +24,7 @@
           </b-datetimepicker>
         </b-field>
       </div>
-      <div class="column mt-3">
+      <div class="column">
         <b-switch
           v-if="!etapa1"
           :disabled="proveedor.nombre !== '' ? true : false"
@@ -33,14 +33,14 @@
           Es un nuevo proveedor?
         </b-switch>
         <!-- NUEVO PROVEEDOR -->
-        <div v-if="nuevoProveedor">
-          <b-field label="Nombre">
+        <div v-if="nuevoProveedor" :class="etapa1 ? 'columns' : ''">
+          <b-field label="Nombre" :class="etapa1 ? 'column' : ''">
             <b-input v-model="proveedor.nombre"></b-input>
           </b-field>
-          <b-field label="Apellidos">
+          <b-field label="Apellidos" :class="etapa1 ? 'column' : ''">
             <b-input v-model="proveedor.apellidos"></b-input>
           </b-field>
-          <b-field label="Busque el Laboratorio">
+          <b-field v-if="!etapa1" label="Busque el Laboratorio">
             <div>
               Si no encuentra el Laboratorio y quiere crear uno, haga click
               <router-link to="/laboratorios/crear">aqui</router-link>
@@ -60,7 +60,7 @@
               </div>
             </div>
           </b-field>
-          <b-field label="Numero">
+          <b-field v-if="!etapa1" label="Numero">
             <b-input v-model.number="proveedor.numero"></b-input>
           </b-field>
         </div>
@@ -121,12 +121,10 @@
     </b-button>
 
     <div class="mt-3" v-if="etapa1">
-      Añadir medicamento
+      <div class="title m-0">Busque un medicamento</div>
       <br />
 
-      <b-checkbox v-model="medicamentoNuevo">
-        Es un medicamento nuevo?
-      </b-checkbox>
+      <b-switch v-model="medicamentoNuevo"> Es un medicamento nuevo? </b-switch>
 
       <!-- Medicamento Nuevo -->
       <div v-if="medicamentoNuevo" class="columns">
@@ -181,7 +179,7 @@
       </div>
       <!-- Medicamento Existente -->
       <div v-if="!medicamentoNuevo">
-        <b-field label="Busque un Medicamento">
+        <b-field>
           <b-autocomplete
             class="my-3"
             rounded
@@ -260,6 +258,8 @@
       <b-button type="is-success" expanded @click="enviarCompra"
         >Enviar</b-button
       >
+
+      <b-loading is-full-page v-model="isLoading"></b-loading>
     </div>
   </div>
 </template>
@@ -273,6 +273,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       autoLabo: "",
       autoMedi: "",
       autoProv: "",
@@ -307,7 +308,7 @@ export default {
         apellidos: "",
         laboratorio: "",
         numero: 0,
-        id: ""
+        id: "",
       },
     };
   },
@@ -320,7 +321,7 @@ export default {
       "guardarCompra",
       "guardarMedicamentoInventario",
       "editarMedicamentoInventario",
-      "guardarProveedor"
+      "guardarProveedor",
     ]),
     alertCustom(mensaje) {
       this.$buefy.dialog.alert({
@@ -365,8 +366,8 @@ export default {
     enviarCompra() {
       const shortid = require("shortid");
       if (this.medicamentos !== null && this.medicamentos.length > 0) {
-        this.proveedor.laboratorio = this.laboratorio
-        this.proveedor.id = shortid.generate()
+        this.proveedor.laboratorio = this.laboratorio;
+        this.proveedor.id = shortid.generate();
         this.compra.proveedor = this.nuevoProveedor
           ? this.proveedor
           : this.proveedorSeleccionado;
@@ -376,12 +377,14 @@ export default {
         this.compra.id = shortid.generate();
         this.guardarCompra(this.compra);
         this.enviarMedicamento();
-        this.guardarProveedor(this.proveedor);
+        if (this.nuevoProveedor) {
+          this.guardarProveedor(this.proveedor);
+        }
 
-      }else{
-        this.alertCustom("Error al enviar la compra")
+        this.openLoading()
+      } else {
+        this.alertCustom("Error al enviar la compra");
       }
-
 
       // this.medicamentos.splice(0, this.medicamentos.length);
     },
@@ -405,6 +408,13 @@ export default {
     validarTexto(texto) {
       const re = /^[A-Za-z &]+$/;
       return re.test(String(texto).toLowerCase());
+    },
+    openLoading() {
+      this.isLoading = true;
+      setTimeout(() => {
+        this.isLoading = false;
+        this.medicamentos.splice(0, this.medicamentos.length);
+      }, 3 * 1000);
     },
   },
   computed: {
@@ -465,7 +475,16 @@ export default {
           return true;
         }
       } else {
-        return false;
+        if (
+          this.medicamento !== null &&
+          this.medicamento.nombre.trim() !== "" &&
+          this.medicamento.vencimiento > new Date() &&
+          this.medicamento.lote.trim() !== ""
+        ) {
+          return false;
+        } else {
+          return true;
+        }
       }
     },
     verificarFechaProveedor() {
@@ -485,8 +504,8 @@ export default {
             this.validarTexto(this.proveedor.nombre) &&
             this.proveedor.apellidos.trim() !== "" &&
             this.validarTexto(this.proveedor.apellidos) &&
-            this.proveedor.numero.toString().trim().length > 6 &&
-            this.proveedor.numero.toString().trim().length < 9
+            this.proveedor.numero.toString().length > 6 &&
+            this.proveedor.numero.toString().length < 9
           ) {
             return false;
           } else {

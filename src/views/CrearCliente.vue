@@ -25,19 +25,8 @@
             </b-field>
             <div class="columns">
               <b-field class="column" label="Nit/CI">
-                <b-input
-                  v-model="cliente.nit"
-                  placeholder="Nit/CI"
-                  type="number"
-                ></b-input>
+                <b-input v-model="cliente.nit" placeholder="Nit/CI"></b-input>
               </b-field>
-              <b-field class="column" label="Complemento ">
-                <b-input
-                  v-model="complemento"
-                  placeholder="Deje en blanco si no lo tiene"
-                ></b-input>
-              </b-field>
-
             </div>
           </section>
         </div>
@@ -62,9 +51,7 @@ import MenuDes from "../components/MenuDes";
 
 export default {
   data() {
-    return {
-      complemento: "",
-    };
+    return {};
   },
   components: {
     MenuDes,
@@ -74,7 +61,7 @@ export default {
     enviarCliente() {
       const shortid = require("shortid");
       this.cliente.id = shortid.generate();
-      this.cliente.nit = this.cliente.nit + this.complemento;
+      this.cliente.nit = this.cliente.nit;
 
       if (this.buscarNit() === this.cliente.nit) {
         this.nitExistente();
@@ -82,9 +69,14 @@ export default {
         this.guardarCliente();
       }
     },
-    validarTexto(texto) {
-      const re = /^[A-Za-z &]+$/;
-      return re.test(String(texto).toLowerCase());
+    validarTexto(texto, espaciado) {
+      if (espaciado) {
+        const re = /^[A-Za-z0-9 &]+$/;
+        return re.test(String(texto).toLowerCase());
+      } else {
+        const re = /^[A-Za-z0-9]+$/;
+        return re.test(String(texto).toLowerCase());
+      }
     },
     buscarNit() {
       let nuevoNit = "";
@@ -102,7 +94,6 @@ export default {
         message:
           "Este Nit ya existe en el registro, intente con otro por favor",
         type: "is-danger",
-        
       });
     },
   },
@@ -110,10 +101,12 @@ export default {
     ...mapState(["cliente", "clientes"]),
     verificarDatos() {
       if (
+        this.cliente !== null &&
         this.cliente.razon.trim() !== "" &&
-        this.validarTexto(this.cliente.razon) &&
+        this.validarTexto(this.cliente.razon, true) &&
         this.cliente.nit.toString().length > 6 &&
-        (this.complemento === "" || this.complemento.trim().length < 2)
+        this.cliente.razon.toString().length > 6 &&
+        this.validarTexto(this.cliente.nit.toString(), false)
       ) {
         return false;
       } else {
