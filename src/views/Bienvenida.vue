@@ -8,20 +8,19 @@
               Bienvenido a Farmax
             </div>
             <div class="m-3">
-              <div class="columns">
+              <div>
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/undraw_doctors_hwty.svg?alt=media&token=c6787570-1466-4219-b062-981598e58dfe"
+                  width="600"
+                  alt=""
+                />
+              </div>
 
-              <img class="column"
-                src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/undraw_doctors_hwty.svg?alt=media&token=c6787570-1466-4219-b062-981598e58dfe"
-                width="500"
-                alt=""
-              />
-              <div class="column">
-                <p>
-                  Haga click en el boton 
-                </p>
-              </div>
-              </div>
-              <b-button tag="router-link" expanded icon-right="arrow-right" type="is-primary" to="/inicio">Inicio</b-button>
+              <b-loading
+                :is-full-page="isFullPage"
+                v-model="isLoading"
+                :can-cancel="true"
+              ></b-loading>
             </div>
           </div>
         </div>
@@ -33,10 +32,29 @@
 <script>
 // @ is an alias to /src
 import CardLogin from "../components/CardLogin";
+import router from "../router";
 export default {
+  data() {
+    return {
+      isLoading: false,
+      isFullPage: true,
+    };
+  },
+  methods: {
+    openLoading() {
+      this.isLoading = true;
+      setTimeout(() => {
+        this.isLoading = false;
+        router.push("/inicio");
+      },  500);
+    },
+  },
   name: "Home",
   components: {
     CardLogin,
+  },
+  created() {
+    this.openLoading();
   },
 };
 </script>

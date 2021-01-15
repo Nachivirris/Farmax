@@ -250,7 +250,7 @@ export default new Vuex.Store({
       }
     },
     async cargarDatosUsuario({ commit, state }) {
-      console.log("so");
+
       // console.log(state.usuarios);
 
       state.usuarios.forEach((element) => {
@@ -260,6 +260,8 @@ export default new Vuex.Store({
           state.usuario=element
         }
       });
+
+
       // console.log("si",idUser);
       // try {
       //   const respuesta = await fetch(
@@ -540,7 +542,6 @@ export default new Vuex.Store({
     getVenta({ commit }, id) {
       commit("getVenta", id);
     },
-
     añadirMedicamentoLista({ commit, state }) {
       state.medicamentos.push(state.medicamento);
       state.medicamento = {
@@ -562,7 +563,6 @@ export default new Vuex.Store({
         }, checkedRows)
       );
     },
-
     async cargarProveedores({ commit, state }) {
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));

@@ -37,6 +37,7 @@
                   placeholder="Deje en blanco si no lo tiene"
                 ></b-input>
               </b-field>
+
             </div>
           </section>
         </div>
@@ -69,22 +70,44 @@ export default {
     MenuDes,
   },
   methods: {
-    ...mapActions(["guardarCliente"]),
+    ...mapActions(["guardarCliente", "cargarClientes"]),
     enviarCliente() {
       const shortid = require("shortid");
       this.cliente.id = shortid.generate();
+      this.cliente.nit = this.cliente.nit + this.complemento;
 
-      this.cliente.nit = this.cliente.nit + this.complemento
-
-      this.guardarCliente();
+      if (this.buscarNit() === this.cliente.nit) {
+        this.nitExistente();
+      } else {
+        this.guardarCliente();
+      }
     },
     validarTexto(texto) {
       const re = /^[A-Za-z &]+$/;
       return re.test(String(texto).toLowerCase());
     },
+    buscarNit() {
+      let nuevoNit = "";
+      this.clientes.forEach((element) => {
+        if (this.cliente.nit === element.nit) {
+          nuevoNit = element.nit;
+        }
+      });
+
+      return nuevoNit;
+    },
+    nitExistente() {
+      this.$buefy.dialog.alert({
+        title: "Error",
+        message:
+          "Este Nit ya existe en el registro, intente con otro por favor",
+        type: "is-danger",
+        
+      });
+    },
   },
   computed: {
-    ...mapState(["cliente"]),
+    ...mapState(["cliente", "clientes"]),
     verificarDatos() {
       if (
         this.cliente.razon.trim() !== "" &&
@@ -98,7 +121,9 @@ export default {
       }
     },
   },
-  created() {},
+  created() {
+    this.cargarClientes();
+  },
 };
 </script>
 

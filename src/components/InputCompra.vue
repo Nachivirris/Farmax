@@ -47,16 +47,15 @@
               <div>
                 <b-autocomplete
                   rounded
-                  v-model="proveedor.laboratorio"
-                  :data="laboratoriosFiltrados"
+                  v-model="autoLabo"
                   placeholder="Ej. Nombre Laboratorio"
+                  :open-on-focus="true"
+                  :data="laboratoriosFiltrados"
                   icon="magnify"
+                  field="nombre"
                   clearable
-                  @select="(option) => (selected = option)"
+                  @select="(option) => (laboratorio = option)"
                 >
-                  <template slot="empty"
-                    >No se encontraron laboratorios
-                  </template>
                 </b-autocomplete>
               </div>
             </div>
@@ -64,27 +63,14 @@
           <b-field label="Numero">
             <b-input v-model.number="proveedor.numero"></b-input>
           </b-field>
-
-          {{ proveedor }}
         </div>
         <!-- PROVEEDOR EXISTENTE -->
         <div v-if="!nuevoProveedor">
           <section>
-            <p  v-if="proveedorSeleccionado.nombre !==''"  class="content">
-              <b> Proveedor: </b>
-              {{
-                proveedorSeleccionado.nombre +
-                " " +
-                proveedorSeleccionado.apellidos +
-                " - " +
-                proveedorSeleccionado.laboratorio.nombre
-              }}
-            </p>
-
             <b-field v-if="!etapa1" label="Busque un proveedor">
               <b-autocomplete
                 rounded
-                v-model="proveedor.nombre"
+                v-model="autoProv"
                 placeholder="Ej. Nombre Apellido"
                 :open-on-focus="true"
                 :data="proveedoresFiltrados"
@@ -94,16 +80,40 @@
               >
               </b-autocomplete>
             </b-field>
+            <p
+              v-if="
+                proveedorSeleccionado !== null &&
+                proveedorSeleccionado.nombre !== ''
+              "
+              class="content"
+            >
+              <b> Proveedor: </b>
+              {{
+                proveedorSeleccionado.nombre +
+                " " +
+                proveedorSeleccionado.apellidos +
+                " - " +
+                proveedorSeleccionado.laboratorio.nombre
+              }}
+            </p>
           </section>
         </div>
       </div>
     </div>
-
+    prove
+    {{ proveedor }}
+    <br />
+    provesele
+    {{ proveedorSeleccionado }}
+    <br />
+    laboratorio
+    {{ laboratorio }}
     <b-button
       v-if="!etapa1"
-      @click="verificarFechaProveedor"
+      :disabled="verificarFechaProveedor"
       type="is-primary"
       expanded
+      @click="etapa1 = !etapa1"
     >
       Siguiente paso
     </b-button>
@@ -182,7 +192,7 @@
           <b-autocomplete
             class="my-3"
             rounded
-            v-model="medicamentoSeleccionado.nombre"
+            v-model="autoMedi"
             placeholder="Ej. Nombre medicamento"
             keep-first
             :open-on-focus="true"
@@ -254,6 +264,15 @@ export default {
   },
   data() {
     return {
+      autoLabo: "",
+      autoMedi: "",
+      autoProv: "",
+      laboratorio: {
+        nombre: "",
+        numero: "",
+        direccion: "",
+        id: "",
+      },
       precioNuevo: 0,
       cantidadAñadida: 0,
       medicamentoNuevo: false,
@@ -278,7 +297,7 @@ export default {
         nombre: "",
         apellidos: "",
         laboratorio: "",
-        numero: 77777777,
+        numero: 0,
       },
     };
   },
@@ -304,35 +323,7 @@ export default {
         ariaModal: true,
       });
     },
-    verificarFechaProveedor() {
-      if (this.nuevoProveedor !== null) {
-        if (this.datetime !== null && this.proveedor !== null) {
-          if (this.proveedor.nombre.trim() !== "") {
-            this.etapa1 = true;
-          } else {
-            this.alertCustom("Proveedor no valido");
-          }
-        } else {
-          this.alertCustom("Proveedor no valido");
-        }
-      } else if (this.proveedorSeleccionado !== null) {
-        if (this.datetime !== null && this.proveedorSeleccionado !== null) {
-          if (
-            this.proveedorSeleccionado.nombre.trim() !== "" &&
-            this.proveedorSeleccionado.apellidos.trim() !== "" &&
-            this.proveedorSeleccionado.laboratorio.trim() !== ""
-          ) {
-            this.etapa1 = true;
-          } else {
-            this.alertCustom("Proveedor no valido");
-          }
-        } else {
-          this.alertCustom("Proveedor no valido");
-        }
-      } else {
-        //console.log("Ok");
-      }
-    },
+
     enviarMedicamentoLista() {
       const shortid = require("shortid");
       //Medicamento Nuevo
@@ -373,7 +364,6 @@ export default {
     enviarCompra() {
       const shortid = require("shortid");
 
-
       this.compra.proveedor = this.nuevoProveedor
         ? this.proveedor
         : this.proveedorSeleccionado;
@@ -388,11 +378,9 @@ export default {
     enviarMedicamento() {
       let nuevaCantidad = 0;
       this.medicamentos.forEach((med) => {
-
         if (this.inventario.find((item) => item.id === med.id)) {
           this.inventario.forEach((i) => {
             if (i.id == med.id) {
-
               nuevaCantidad = i.cantidad;
             }
           });
@@ -403,6 +391,10 @@ export default {
           this.guardarMedicamentoInventario(med);
         }
       });
+    },
+    validarTexto(texto) {
+      const re = /^[A-Za-z &]+$/;
+      return re.test(String(texto).toLowerCase());
     },
   },
   computed: {
@@ -416,16 +408,12 @@ export default {
     ]),
     ...mapGetters(["calcularTotalCompras"]),
     laboratoriosFiltrados() {
-      const nombresLaboratorios = this.laboratorios.map(function (lab) {
-        return lab.nombre;
-      });
-
-      return nombresLaboratorios.filter((option) => {
+      return this.laboratorios.filter((option) => {
         return (
-          option
+          option.nombre
             .toString()
             .toLowerCase()
-            .indexOf(this.proveedor.laboratorio.toLowerCase()) >= 0
+            .indexOf(this.autoLabo.toLowerCase()) >= 0
         );
       });
     },
@@ -435,7 +423,7 @@ export default {
           option.nombre
             .toString()
             .toLowerCase()
-            .indexOf(this.proveedor.nombre.toLowerCase()) >= 0
+            .indexOf(this.autoProv.toLowerCase()) >= 0
         );
       });
     },
@@ -445,7 +433,7 @@ export default {
           option.nombre
             .toString()
             .toLowerCase()
-            .indexOf(this.medicamento.nombre.toLowerCase()) >= 0
+            .indexOf(this.autoMedi.toLowerCase()) >= 0
         );
       });
     },
@@ -473,6 +461,36 @@ export default {
       //   return false;
       // }
       return true;
+    },
+    verificarFechaProveedor() {
+      if (
+        this.datetime !== null &&
+        this.proveedorSeleccionado !== null &&
+        this.proveedor != null
+      ) {
+        if (!this.nuevoProveedor && this.proveedorSeleccionado.nombre !== "") {
+          return false;
+        } if (this.nuevoProveedor) {
+          if (
+            this.laboratorio !== null &&
+            this.laboratorio.nombre !== "" &&
+            this.proveedor.nombre.trim() !== "" &&
+            this.validarTexto(this.proveedor.nombre) &&
+            this.proveedor.apellidos.trim() !== "" &&
+            this.validarTexto(this.proveedor.apellidos) &&
+            this.proveedor.numero.toString().trim().length > 6 &&
+            this.proveedor.numero.toString().trim().length < 9 
+          ) {
+            return false;
+          } else {
+            return true;
+          }
+        }else{
+          return true
+        }
+      } else {
+        return true;
+      }
     },
   },
   created() {
