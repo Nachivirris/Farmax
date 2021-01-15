@@ -524,6 +524,7 @@ export default {
     this.cargarLaboratorios();
     this.cargarInventario();
   },
+  
 };
 </script>
 

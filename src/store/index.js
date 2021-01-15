@@ -661,10 +661,9 @@ export default new Vuex.Store({
       commit("getVenta", id);
     },
     añadirMedicamentoLista({ commit, state }) {
-
-      state.medicamentos = state.medicamentos.filter(element => {
-        element.id !== state.medicamento.id
-      })
+      state.medicamentos = state.medicamentos.filter((element) => {
+        element.id !== state.medicamento.id;
+      });
 
       state.medicamentos.push(state.medicamento);
       state.medicamento = {
@@ -760,7 +759,6 @@ export default new Vuex.Store({
 
         // commit("setCompra", dataDB);
         //commit("reset")
-        
       } catch (error) {
         //console.log(error);
       }
@@ -836,7 +834,6 @@ export default new Vuex.Store({
         // commit("setCompra", dataDB);
         //commit("reset")
         router.push("/laboratorios");
-
       } catch (error) {
         //console.log(error);
       }
@@ -935,13 +932,16 @@ export default new Vuex.Store({
     getInventario({ commit }, id) {
       commit("getInventario", id);
     },
-    async guardarCliente({ commit, state }) {
+    async guardarCliente({ commit, state }, cliente) {
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));
       } else {
         return commit("setUser", null);
       }
 
+      if (cliente !== null) {
+        state.cliente = cliente;
+      }
       try {
         //console.log("Firebase compra");
         //console.log(state.compra);
@@ -960,7 +960,12 @@ export default new Vuex.Store({
         //console.log(dataDB);
 
         // commit("setCompra", dataDB);
-        router.push("/clientes");
+
+        if (cliente !== null) {
+          router.push("/ventas");
+        } else {
+          router.push("/clientes");
+        }
         //commit("reset")
       } catch (error) {
         //console.log(error);

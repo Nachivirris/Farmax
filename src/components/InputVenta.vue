@@ -25,28 +25,20 @@
       </div>
       <div class="column">
         <b-field label="Busque un Nit">
-          <b-autocomplete
-            rounded
-            v-model="autonit"
-            :data="clientesFiltrados"
-            placeholder="Ej. Numero de Carnet"
-            icon="magnify"
-            :open-on-focus="true"
-            clearable
-            field="nit"
-            @select="(option) => (clienteNuevo = option)"
-          >
-            <template slot="empty">No se encontraron clientes </template>
-          </b-autocomplete>
+          <b-input v-model="clienteNuevo.nit"> </b-input>
         </b-field>
       </div>
       <div class="column">
         <b-field label="Razon Social">
-          <b-input type="text" :v-model="clienteNuevo !== null ? clienteNuevo.razon : error"></b-input>
+          <b-input
+            type="text"
+            :value="buscarNit"
+            v-model="clienteNuevo.razon"
+          ></b-input>
         </b-field>
       </div>
     </div>
-    {{clienteNuevo}}
+    {{ clienteNuevo }}
     <div>
       <b-field label="Busque un Medicamento">
         <b-autocomplete
@@ -161,7 +153,7 @@ export default {
       "añadirMedicamentoLista",
       "guardarVenta",
       "editarMedicamentoInventario",
-      "reset",
+      "reset","guardarCliente"
     ]),
     enviarMedicamentoLista() {
       this.medicamento.cantidad = this.cantidadDisminuida;
@@ -177,21 +169,39 @@ export default {
     enviarVenta() {
       const shortid = require("shortid");
       if (
+        this.clienteNuevo !== null &&
         this.medicamentos !== null &&
         this.medicamentos.length > 0 &&
-        this.clienteNuevo.nit > 0 &&
+        this.clienteNuevo.nit !== "" &&
+        this.validarTexto(this.clienteNuevo.nit, false) &&
+        this.validarTexto(this.clienteNuevo.razon, true) &&
         this.clienteNuevo.razon.trim() !== ""
       ) {
-        this.venta.cliente = this.clienteNuevo;
-        this.venta.fecha = this.datetime;
-        this.venta.medicamentos = this.medicamentos;
-        this.venta.total = this.calcularTotalCompras;
-        this.venta.id = shortid.generate();
-        this.venta.regente = this.usuario;
+        if (this.clienteNuevo.id === "") {
+          this.clienteNuevo.id = shortid.generate();
+          this.venta.cliente = this.clienteNuevo;
+          this.venta.fecha = this.datetime;
+          this.venta.medicamentos = this.medicamentos;
+          this.venta.total = this.calcularTotalCompras;
+          this.venta.id = shortid.generate();
+          this.venta.regente = this.usuario;
+          this.guardarVenta();
+          this.guardarCliente();
+        }else{
+          this.clienteNuevo.id = shortid.generate();
+          this.venta.cliente = this.clienteNuevo;
+          this.venta.fecha = this.datetime;
+          this.venta.medicamentos = this.medicamentos;
+          this.venta.total = this.calcularTotalCompras;
+          this.venta.id = shortid.generate();
+          this.venta.regente = this.usuario;
+          this.guardarVenta();
+        }
+
+        console.log(this.venta);
         //   this.guardarCompra(this.venta);
 
-        // this.guardarVenta();
-        // this.enviarMedicamento();
+        this.enviarMedicamento();
         // this.medicamentos.splice(0, this.medicamentos.length);
       } else {
         this.alertCustom("Error al enviar la Venta");
@@ -225,6 +235,15 @@ export default {
         ariaRole: "alertdialog",
         ariaModal: true,
       });
+    },
+    validarTexto(texto, espaciado) {
+      if (espaciado) {
+        const re = /^[A-Za-z0-9 &]+$/;
+        return re.test(String(texto).toLowerCase());
+      } else {
+        const re = /^[A-Za-z0-9]+$/;
+        return re.test(String(texto).toLowerCase());
+      }
     },
   },
   computed: {
@@ -273,10 +292,27 @@ export default {
         return true;
       }
     },
+    buscarNit() {
+      let razon = "";
+      let id = "";
+      this.clientes.forEach((element) => {
+        if (element.nit === this.clienteNuevo.nit) {
+          console.log("si coincide");
+          razon = element.razon;
+          id = element.id;
+        }
+
+        this.clienteNuevo.razon = razon;
+        this.clienteNuevo.id = id;
+      });
+    },
   },
   created() {
     this.cargarClientes();
     this.cargarInventario();
+  },
+  destroyed () {
+    this.medicamentos.splice(0, this.medicamentos.length);
   },
 };
 </script>
