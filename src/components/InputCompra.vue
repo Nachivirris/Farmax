@@ -465,7 +465,7 @@ export default {
           return true;
         }
       } else {
-        return true;
+        return false;
       }
     },
     verificarFechaProveedor() {
