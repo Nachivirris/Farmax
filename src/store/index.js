@@ -16,7 +16,7 @@ export default new Vuex.Store({
       rol: "",
       nombre: "",
       apellidos: "",
-      localId: "",
+      token: "",
     },
     usuarios: [],
     proveedor: {
@@ -76,7 +76,7 @@ export default new Vuex.Store({
       nit: "",
     },
     clientes: [],
-    local: "",
+    token: "",
   },
   mutations: {
     setError(state, payload) {
@@ -337,7 +337,7 @@ export default new Vuex.Store({
           return commit("setError", userDB.error.message);
         }
 
-        state.local = userDB.localId;
+        state.token = userDB.idToken;
 
         commit("setError", null);
       } catch (error) {
@@ -350,7 +350,7 @@ export default new Vuex.Store({
       } else {
         return commit("setUser", null);
       }
-      user.localId = state.local;
+      user.token = state.token;
       try {
         //console.log(state.compra);
         const res = await fetch(
@@ -383,6 +383,28 @@ export default new Vuex.Store({
         );
 
         commit("eliminarUsuario", id);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
+    async eliminarUsuarioAuth({ commit, state }, id) {
+
+      try {
+        const res = await fetch(
+          `https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyCh37mmPaCWQF2osXVXPpWQ02kNz2YWMP0`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              idToken : id
+            })
+          }
+        );
+
+        const userDB = await res.json();
+        if (userDB.error) {
+          return commit("setError", userDB.error.message);
+        }
+
       } catch (error) {
         //console.log(error);
       }

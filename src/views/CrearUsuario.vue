@@ -86,7 +86,7 @@ export default {
         nombre: "",
         apellidos: "",
         password: "",
-        localId: "",
+
       },
       isLoading: false,
       isFullPage: true,
@@ -107,7 +107,7 @@ export default {
         setTimeout(() => {
           this.isLoading = false;
           this.guardarUsuario(this.usuario);
-        }, 1 * 1000);
+        }, 2 * 1000);
       }
     },
     validarEmail(email) {
@@ -116,7 +116,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["local", "error"]),
+    ...mapState(["token", "error"]),
     verificarCampos() {
       if (
         this.usuario.nombre.trim() !== "" &&

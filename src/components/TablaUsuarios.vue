@@ -56,7 +56,7 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["eliminarUsuario", "cargarUsuarios"]),
+    ...mapActions(["eliminarUsuario", "cargarUsuarios", "eliminarUsuarioAuth"]),
 
     borrarCliente(fila) {
       this.$buefy.dialog.confirm({
@@ -68,7 +68,9 @@ export default {
         hasIcon: true,
         onConfirm: () => {
           this.$buefy.toast.open("Usuario eliminado!");
+
           this.eliminarUsuario(fila.id);
+          this.eliminarUsuarioAuth(fila.token)
         },
       });
     },
