@@ -16,6 +16,7 @@ export default new Vuex.Store({
       rol: "",
       nombre: "",
       apellidos: "",
+      localId: "",
     },
     usuarios: [],
     proveedor: {
@@ -335,7 +336,9 @@ export default new Vuex.Store({
         if (userDB.error) {
           return commit("setError", userDB.error.message);
         }
-        //state.local = userDB.localId
+
+        state.local = userDB.localId;
+
         commit("setError", null);
       } catch (error) {
         //console.log(error);
@@ -347,7 +350,7 @@ export default new Vuex.Store({
       } else {
         return commit("setUser", null);
       }
-      //user.id = state.local
+      user.localId = state.local;
       try {
         //console.log(state.compra);
         const res = await fetch(
@@ -370,7 +373,6 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-
     async eliminarUsuario({ commit, state }, id) {
       try {
         await fetch(

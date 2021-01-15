@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 // @ is an alias to /src
 import CardLogin from "../components/CardLogin";
 import router from "../router";
@@ -41,12 +42,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["cargarUsuarios","cargarDatosUsuario"]),
     openLoading() {
       this.isLoading = true;
       setTimeout(() => {
         this.isLoading = false;
         router.push("/inicio");
-      },  500);
+      },  3 * 1000);
     },
   },
   name: "Home",
@@ -55,6 +57,8 @@ export default {
   },
   created() {
     this.openLoading();
+    this.cargarUsuarios();
+    this.cargarDatosUsuario();
   },
 };
 </script>

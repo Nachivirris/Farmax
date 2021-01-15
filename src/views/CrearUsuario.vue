@@ -63,12 +63,17 @@
         @click="enviarUsuario"
         >Guardar Usuario</b-button
       >
+      <b-loading
+        :is-full-page="isFullPage"
+        v-model="isLoading"
+
+      ></b-loading>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import MenuDes from "../components/MenuDes";
 
 export default {
@@ -81,7 +86,10 @@ export default {
         nombre: "",
         apellidos: "",
         password: "",
+        localId: "",
       },
+      isLoading: false,
+      isFullPage: true,
     };
   },
   components: {
@@ -94,7 +102,13 @@ export default {
       this.usuario.id = shortid.generate();
       this.registroUsuario(this.usuario);
       this.usuario.password = "";
-      this.guardarUsuario(this.usuario);
+      this.isLoading = true;
+      if (this.error !== null) {
+        setTimeout(() => {
+          this.isLoading = false;
+          this.guardarUsuario(this.usuario);
+        }, 1 * 1000);
+      }
     },
     validarEmail(email) {
       const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -102,12 +116,13 @@ export default {
     },
   },
   computed: {
+    ...mapState(["local", "error"]),
     verificarCampos() {
       if (
         this.usuario.nombre.trim() !== "" &&
         this.usuario.apellidos.trim() !== "" &&
         this.usuario.email.trim() !== null &&
-        this.validarEmail(this.usuario.email) && 
+        this.validarEmail(this.usuario.email) &&
         this.usuario.rol !== ""
       ) {
         return false;
