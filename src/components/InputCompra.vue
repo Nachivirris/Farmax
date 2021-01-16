@@ -346,7 +346,7 @@ export default {
           this.medicamentoSeleccionado.vencimiento
         );
         let resta = vec.getTime() - now.getTime();
-        console.log(resta);
+
       }
     },
 

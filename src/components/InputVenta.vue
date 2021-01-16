@@ -38,7 +38,7 @@
         </b-field>
       </div>
     </div>
-    {{ clienteNuevo }}
+
     <div>
       <b-field label="Busque un Medicamento">
         <b-autocomplete
@@ -198,7 +198,7 @@ export default {
           this.guardarVenta();
         }
 
-        console.log(this.venta);
+        
         //   this.guardarCompra(this.venta);
 
         this.enviarMedicamento();
@@ -297,7 +297,7 @@ export default {
       let id = "";
       this.clientes.forEach((element) => {
         if (element.nit === this.clienteNuevo.nit) {
-          console.log("si coincide");
+          
           razon = element.razon;
           id = element.id;
         }

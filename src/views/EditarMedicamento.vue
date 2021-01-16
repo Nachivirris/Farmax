@@ -76,7 +76,7 @@ export default {
   methods: {
     ...mapActions(["getInventario", "cargarInventario", "editarMedicamentoInventario"]),
     enviarMedicamento(){
-        console.log(this.medicamento);
+        
         this.editarMedicamentoInventario(this.medicamento)
         
     }
