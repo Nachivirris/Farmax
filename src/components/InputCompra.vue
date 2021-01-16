@@ -189,7 +189,11 @@
             :open-on-focus="true"
             :data="medicamentosFiltrados"
             field="nombre"
-            @select="(option) => (medicamentoSeleccionado = option)"
+            @select="
+              (option) => (
+                (medicamentoSeleccionado = option), verificarFechaVencimiento()
+              )
+            "
           >
           </b-autocomplete>
         </b-field>
@@ -335,6 +339,16 @@ export default {
         ariaModal: true,
       });
     },
+    verificarFechaVencimiento() {
+      if (this.medicamentoSeleccionado !== null) {
+        let now = new Date();
+        let vec = new Date(
+          this.medicamentoSeleccionado.vencimiento
+        );
+        let resta = vec.getTime() - now.getTime();
+        console.log(resta);
+      }
+    },
 
     enviarMedicamentoLista() {
       const shortid = require("shortid");
@@ -381,7 +395,7 @@ export default {
           this.guardarProveedor(this.proveedor);
         }
 
-        this.openLoading()
+        this.openLoading();
       } else {
         this.alertCustom("Error al enviar la compra");
       }
@@ -524,7 +538,6 @@ export default {
     this.cargarLaboratorios();
     this.cargarInventario();
   },
-  
 };
 </script>
 

@@ -2,8 +2,9 @@
   <div class="mt-5 columns">
     <MenuDes tipoMenu="Inicio" class="column" />
     <div class="m-5 column">
-      <div class="title has-text-primary is-four-fifths">BIENVENIDO A.</div>
-      <!-- <div class="title is-3 ">Bienvenido a: </div> -->
+      <div class="title is-1 has-text-primary is-four-fifths">Bienvenido a</div>
+
+
       <div class=" ">
         <img 
           src="https://firebasestorage.googleapis.com/v0/b/farmaxip.appspot.com/o/Recurso_13.png?alt=media&token=13e6af75-a20b-449b-b986-6fbad6684f4e"
@@ -19,6 +20,10 @@
           class="mx-auto"
         />
       </div>
+
+      
+    
+    
     </div>
   </div>
 </template>

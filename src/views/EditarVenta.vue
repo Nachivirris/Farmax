@@ -2,14 +2,14 @@
   <div class="m-5">
     <b-button
       tag="router-link"
-      to="/compras"
+      to="/ventas"
       class="my-3"
       type="is-primary"
       icon-left="arrow-left"
-      >Compras</b-button
+      >Ventas</b-button
     >
-    <div class="title is-1 has-text-primary is-four-fifths">Editar Compra.</div>
-    {{ compra }}
+    <div class="title is-1 has-text-primary is-four-fifths">Editar Venta.</div>
+
 
     <div class="columns">
       <div class="column">
@@ -18,7 +18,7 @@
             rounded
             placeholder="Click to select..."
             icon="calendar-today"
-            v-model="compra.fecha"
+            v-model="venta.fecha"
             horizontal-time-picker
           >
           </b-datetimepicker>
@@ -26,36 +26,32 @@
         <br />
         <div class="columns">
           <div class="column">
-            <b-field class="" label="Nombre Proveedor">
-              <b-input v-model="compra.proveedor.nombre"></b-input>
+            <b-field class="" label="Nombre Regente">
+              <b-input v-model="venta.regente.nombre"></b-input>
             </b-field>
           </div>
           <div class="column">
-            <b-field label="Apellidos Proveedor">
-              <b-input v-model="compra.proveedor.apellidos"></b-input>
+            <b-field label="Apellido Regente">
+              <b-input v-model="venta.regente.apellidos"></b-input>
             </b-field>
           </div>
         </div>
-        <b-field label="Numero">
-          <b-input v-model.number="compra.proveedor.numero"></b-input>
-        </b-field>
+        
         <br />
 
         <div class="columns">
           <div class="column">
-            <b-field label="Nombre Laboratorio">
-              <b-input v-model="compra.proveedor.laboratorio.nombre"></b-input>
+            <b-field label="Razon Cliente">
+              <b-input v-model="venta.cliente.razon"></b-input>
             </b-field>
           </div>
           <div class="column">
-            <b-field label="Direccion">
+            <b-field label="Nit Cliente">
               <b-input
-                v-model="compra.proveedor.laboratorio.direccion"
+                v-model="venta.cliente.nit"
               ></b-input>
             </b-field>
-            <b-field label="Numero Telefonico">
-              <b-input v-model="compra.proveedor.laboratorio.numero"></b-input>
-            </b-field>
+            
           </div>
         </div>
       </div>
@@ -63,7 +59,7 @@
       <div class="column is-two-thirds">
         <div>
           <b-table
-            :data="compra.medicamentos"
+            :data="venta.medicamentos"
             :focusable="true"
             :mobile-cards="true"
           >
@@ -128,8 +124,8 @@
       </div>
     </div>
     <div class="mt-3">
-      <b-button expanded type="is-success" @click="enviarCompra">
-        Guardar compra
+      <b-button expanded type="is-success" @click="enviarVenta">
+        Guardar venta
       </b-button>
     </div>
   </div>
@@ -140,12 +136,12 @@ import { mapActions, mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["compra"]),
+    ...mapState(["venta"]),
   },
   methods: {
-    ...mapActions(["getCompra", "cargarCompras", "editarCompra"]),
+    ...mapActions(["getVenta", "cargarVentas", "editarVenta"]),
     calcularTotal() {
-      const totales = this.compra.medicamentos.map((med) => {
+      const totales = this.venta.medicamentos.map((med) => {
         return med.cantidad * med.precio;
       });
       let suma = 0;
@@ -155,15 +151,15 @@ export default {
 
       return suma;
     },
-    enviarCompra(){
-      this.editarCompra(this.compra)
+    enviarVenta(){
+      this.editarVenta(this.venta)
       
     }
   },
   created() {
-    this.cargarCompras();
-    this.getCompra(this.$route.params.id);
-    this.compra.fecha = new Date(this.compra.fecha);
+    this.cargarVentas();
+    this.getVenta(this.$route.params.id);
+    this.venta.fecha = new Date(this.venta.fecha);
   },
 };
 </script>

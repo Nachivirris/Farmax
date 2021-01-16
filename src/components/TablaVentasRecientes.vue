@@ -65,14 +65,14 @@
         width="40"
         v-slot="props"
       >
-        <!-- <router-link
+        <router-link
           :to="{
-            name: 'EditarCompra',
+            name: 'EditarVenta',
             params: { id: props.row.id },
           }"
         >
-          <b-button class="mx-2" type="is-warning"> Editar </b-button>
-        </router-link> -->
+          <b-button class="mx-2" type="is-warning"> Ver </b-button>
+        </router-link>
         <b-button
           label="Eliminar"
           type="is-danger"

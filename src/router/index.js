@@ -69,6 +69,15 @@ const routes = [
     }
   },
   {
+    path: "ventas/editar/:id",
+    name: "EditarVenta",
+
+    component: () => import("../views/EditarVenta.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/inventario",
     name: "Inventario",
     component: () => import("../views/Inventario.vue"),

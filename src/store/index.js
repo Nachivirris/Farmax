@@ -186,7 +186,7 @@ export default new Vuex.Store({
         return;
       }
 
-      state.compra = state.compras.find((item) => item.id === payload);
+      state.venta = state.ventas.find((item) => item.id === payload);
     },
     setProveedores(state, payload) {
       state.proveedores = payload;
@@ -563,7 +563,25 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-    async editarCompra({ commit, state }) {},
+    async editarCompra({ commit, state }, compra) {
+      try {
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/compras/${compra.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify(compra),
+          }
+        );
+
+        const dataDB = await res.json();
+        router.push("/compras")
+        //commit("reset")
+        //console.log(dataDB);
+        // commit("actualizarInventario", dataDB);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
     async eliminarCompra({ commit, state }, id) {
       try {
         await fetch(
@@ -582,6 +600,7 @@ export default new Vuex.Store({
       commit("getCompra", id);
     },
     async cargarVentas({ commit, state }) {
+
       if (localStorage.getItem("user")) {
         commit("setUser", JSON.parse(localStorage.getItem("user")));
       } else {
@@ -642,7 +661,25 @@ export default new Vuex.Store({
         //console.log(error);
       }
     },
-    async editarVenta({ commit, state }) {},
+    async editarVenta({ commit, state }, venta) {
+      try {
+        const res = await fetch(
+          `https://farmaxip-default-rtdb.firebaseio.com/ventas/${venta.id}.json?auth=${state.user.idToken}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify(venta),
+          }
+        );
+
+        const dataDB = await res.json();
+        router.push("/ventas")
+        //commit("reset")
+        //console.log(dataDB);
+        // commit("actualizarInventario", dataDB);
+      } catch (error) {
+        //console.log(error);
+      }
+    },
     async eliminarVenta({ commit, state }, id) {
       try {
         await fetch(
