@@ -75,7 +75,7 @@ export default {
       this.guardarLaboratorio();
     },
     validarTexto(texto) {
-      const re = /^[A-Za-z &]+$/;
+      const re = /^[A-Za-z &.]+$/;
       return re.test(String(texto).toLowerCase());
     },
   },
@@ -96,6 +96,12 @@ export default {
     },
   },
   created() {},
+  destroyed(){
+    this.laboratorio.id = ""
+    this.laboratorio.nombre = ""
+    this.laboratorio.direccion = ""
+    this.laboratorio.numero = 0
+  }
 };
 </script>
 

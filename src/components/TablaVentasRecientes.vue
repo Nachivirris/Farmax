@@ -1,9 +1,8 @@
 <template>
   <div>
-    <b-table :data="ventas" default-sort="!echa"
->
+    <b-table :data="ventas" default-sort="!echa">
       <b-table-column
-        sortable 
+        sortable
         searchable
         field="cliente.razon"
         label="Cliente"
@@ -13,8 +12,8 @@
         {{ props.row.cliente.razon }}
       </b-table-column>
       <b-table-column
-      v-if="usuario.rol === 'admin'"
-        sortable 
+        v-if="usuario.rol === 'admin'"
+        sortable
         searchable
         field="regente.nombre"
         label="Regente"
@@ -29,7 +28,6 @@
         label="Medicamentos"
         width="40"
         sortable
-        
         v-slot="props"
       >
         {{ props.row.medicamentos[0].nombre }}
@@ -60,6 +58,7 @@
       </b-table-column>
 
       <b-table-column
+        v-if="usuario.rol === 'admin'"
         field="acciones"
         label="Acciones"
         width="40"
@@ -111,10 +110,9 @@ export default {
   computed: {
     ...mapState(["ventas", "usuario"]),
   },
-  created(){
-      this.cargarVentas()
-
-  }
+  created() {
+    this.cargarVentas();
+  },
 };
 </script>
 

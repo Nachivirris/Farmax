@@ -49,9 +49,10 @@
       </b-table-column>
 
       <b-table-column
+      v-if="usuario.rol === 'admin'"
         field="acciones"
         label="Acciones"
-        width="40"
+        width="300"
         v-slot="props"
       >
         <router-link
@@ -105,7 +106,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["inventario"]),
+    ...mapState(["inventario","usuario"]),
   },
   created() {
     this.cargarInventario();

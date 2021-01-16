@@ -18,12 +18,8 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="buttons">
-          
           <!-- <a class="button is-primary is-light"> Iniciar Sesion </a> -->
 
-          <div class="m-3" v-if="usuarioAutenticado">
-            {{usuario.nombre}}
-          </div>
           <router-link to="/login">
             <b-button type="is-primary is-light" v-if="!usuarioAutenticado">
               <strong> Iniciar Sesion </strong>
@@ -36,6 +32,12 @@
             @click="cerrarSesion"
             >Cerrar sesion</b-button
           >
+          <div class="m-3" v-if="usuarioAutenticado">
+            <div class="title is-5">
+              {{ "Usuario: " }}
+            </div>
+            {{ usuario.nombre }}
+          </div>
         </div>
       </b-navbar-item>
     </template>
@@ -47,7 +49,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   computed: {
     ...mapGetters(["usuarioAutenticado"]),
-    ...mapState(["usuario"])
+    ...mapState(["usuario"]),
   },
   methods: {
     ...mapActions(["cerrarSesion"]),

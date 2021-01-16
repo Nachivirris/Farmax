@@ -66,7 +66,7 @@
           tag="router-link"
           to="/usuarios"
           icon="cash"
-          label="Usarios"
+          label="Usuarios"
           :active="tipoMenu === 'Usuarios' ? true : false"
         >
         </b-menu-item>

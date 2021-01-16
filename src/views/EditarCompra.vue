@@ -9,7 +9,7 @@
       >Compras</b-button
     >
     <div class="title is-1 has-text-primary is-four-fifths">Editar Compra.</div>
-    {{ compra }}
+
 
     <div class="columns">
       <div class="column">

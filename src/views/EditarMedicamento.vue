@@ -68,6 +68,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import router from "../router";
 
 export default {
   computed: {
@@ -78,6 +79,7 @@ export default {
     enviarMedicamento(){
         
         this.editarMedicamentoInventario(this.medicamento)
+        router.push("/inventario")
         
     }
   },

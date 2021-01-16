@@ -238,7 +238,7 @@ export default {
     },
     validarTexto(texto, espaciado) {
       if (espaciado) {
-        const re = /^[A-Za-z0-9 &]+$/;
+        const re = /^[A-Za-z0-9 &.]+$/;
         return re.test(String(texto).toLowerCase());
       } else {
         const re = /^[A-Za-z0-9]+$/;

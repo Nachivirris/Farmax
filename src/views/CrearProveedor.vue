@@ -122,7 +122,7 @@ export default {
       this.guardarProveedor();
     },
     validarTexto(texto) {
-      const re = /^[A-Za-z &]+$/;
+      const re = /^[A-Za-z &.]+$/;
       return re.test(String(texto).toLowerCase());
     },
   },

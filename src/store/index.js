@@ -698,9 +698,9 @@ export default new Vuex.Store({
       commit("getVenta", id);
     },
     añadirMedicamentoLista({ commit, state }) {
-      state.medicamentos = state.medicamentos.filter((element) => {
-        element.id !== state.medicamento.id;
-      });
+      // state.medicamentos = state.medicamentos.filter((element) => {
+      //   element.id !== state.medicamento.id;
+      // });
 
       state.medicamentos.push(state.medicamento);
       state.medicamento = {
